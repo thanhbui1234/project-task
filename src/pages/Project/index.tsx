@@ -13,7 +13,6 @@ import type { IProject } from "@/types/project";
 
 export default function Projects() {
   const [openModal, setOpenModal] = useState(false);
-  const [openModalEdit, setOpenModalEdit] = useState(false);
   const { createProject, isPending } = useCreatProject();
   const { data, isFetching } = useGetProjects();
   const form = useForm({
@@ -25,7 +24,7 @@ export default function Projects() {
     },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: createProjectSchema) => {
     createProject(data);
     setOpenModal(false);
     form.reset();
