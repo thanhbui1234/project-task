@@ -4,9 +4,19 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useFormContext, Controller } from "react-hook-form";
 import { STATUS_PROJECT } from "@/consts/statusProject";
+import type { IProject } from "@/types/project";
+import { useEffect } from "react";
 
-export const ProjectFormContent = () => {
-  const { control, formState: { errors } } = useFormContext();
+export const ProjectFormContent = ({ selectedProject }: { selectedProject: IProject }) => {
+  const { control, formState: { errors }, setValue } = useFormContext();
+
+  useEffect(() => {
+    if (selectedProject) {
+      setValue("name", selectedProject.name);
+      setValue("client", selectedProject.client);
+      setValue("status", selectedProject.status);
+    }
+  }, [selectedProject, setValue]);
 
   return (
     <div className="grid gap-5 py-4">
@@ -32,14 +42,14 @@ export const ProjectFormContent = () => {
           control={control}
           name="status"
           render={({ field }) => (
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <Select onValueChange={field.onChange} value={field.value}>
               <SelectTrigger>
                 <SelectValue placeholder="Chọn trạng thái" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={STATUS_PROJECT.CREATED}>Bắt đầu</SelectItem>
                 <SelectItem value={STATUS_PROJECT.IN_PROGRESS}>Đang thực hiện</SelectItem>
-                <SelectItem value={STATUS_PROJECT.PENDING}>Tạm dừng</SelectItem>
+                <SelectItem value={STATUS_PROJECT.PENDING}>Đang chờ</SelectItem>
                 <SelectItem value={STATUS_PROJECT.COMPLETED}>Hoàn thành</SelectItem>
               </SelectContent>
             </Select>
@@ -55,4 +65,3 @@ export const ProjectFormContent = () => {
     </div>
   );
 };
-STATUS_PROJECT

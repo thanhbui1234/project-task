@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { MoreVertical, Edit, Trash2 } from "lucide-react"
 import { type IProject } from "@/types/project"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { isDirector } from "@/utils/role"
 const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "outline" }> = {
   CREATED: { label: "Vừa tạo", variant: "secondary" },
   PENDING: { label: "Đang chờ", variant: "secondary" },
@@ -66,9 +67,9 @@ export const ProjectGrid = ({
                        hover:shadow-xl hover:border-gray-300 hover:-translate-y-1.5
                        transition-all duration-300 overflow-hidden"
           >
-            {/* Nút 3 chấm chỉ hiện khi hover */}
             <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-              <DropdownMenu>
+              {isDirector() && (
+                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
@@ -79,7 +80,9 @@ export const ProjectGrid = ({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40">
-                  <DropdownMenuItem onClick={() => onEdit?.(project)} className="cursor-pointer">
+                  <DropdownMenuItem onClick={() => {
+                    onEdit?.(project);
+                  }} className="cursor-pointer">
                     <Edit className="mr-2 h-4 w-4" />
                     Chỉnh sửa
                   </DropdownMenuItem>
@@ -91,7 +94,8 @@ export const ProjectGrid = ({
                     Xóa dự án
                   </DropdownMenuItem>
                 </DropdownMenuContent>
-              </DropdownMenu>
+                </DropdownMenu>
+              )}
             </div>
 
             <CardHeader className="pb-3">

@@ -2,7 +2,7 @@ import axios from "axios"
 import { getToken, clearAuth } from "@/utils/auth"
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL,
+  baseURL: import.meta.env.VITE_BASE_URL + '/api/v1',
   timeout: 15000,
 })
 
@@ -34,7 +34,7 @@ api.interceptors.response.use(
       // window.location.href = "/login"
     }
 
-    return Promise.reject(error)
+    return Promise.reject(error.response.data)
   }
 )
 

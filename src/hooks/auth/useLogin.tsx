@@ -18,9 +18,6 @@ export const useLogin = () => {
       auth.login(response.user);
       toast.success("Đăng nhập thành công");
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
   });
 
   return { login, isPending };
