@@ -4,12 +4,13 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createProjectSchema } from "@/schemas/Project";
+import { createProjectSchema, type ICreateProjectSchema } from "@/schemas/Project";
 import { ProjectFormContent } from "@/components/pages/Project/FormCreatProject";
 import { useCreatProject } from "@/hooks/project/useCreatProject";
 import { useGetProjects } from "@/hooks/project/useGetProject";
 import { ProjectGrid } from "@/components/pages/Project/CardProject";
 import type { IProject } from "@/types/project";
+import type { registerType } from "@/schemas/auth";
 
 export default function Projects() {
   const [openModal, setOpenModal] = useState(false);
@@ -24,8 +25,8 @@ export default function Projects() {
     },
   });
 
-  const onSubmit = (data: createProjectSchema) => {
-    createProject(data);
+  const onSubmit = (data: ICreateProjectSchema) => {
+    createProject(data as unknown as registerType);
     setOpenModal(false);
     form.reset();
   };
