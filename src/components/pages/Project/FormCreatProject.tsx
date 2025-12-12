@@ -39,7 +39,7 @@ export const ProjectFormContent = () => {
               <SelectContent>
                 <SelectItem value={STATUS_PROJECT.CREATED}>Bắt đầu</SelectItem>
                 <SelectItem value={STATUS_PROJECT.IN_PROGRESS}>Đang thực hiện</SelectItem>
-                <SelectItem value={STATUS_PROJECT.PENDING}>Tạm dừng</SelectItem>
+                <SelectItem value={STATUS_PROJECT.PENDING}>Đang chờ</SelectItem>
                 <SelectItem value={STATUS_PROJECT.COMPLETED}>Hoàn thành</SelectItem>
               </SelectContent>
             </Select>
