@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { MoreVertical, Edit, Trash2 } from "lucide-react"
 import { type IProject } from "@/types/project"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { isDirector } from "@/utils/role"
 const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "outline" }> = {
   CREATED: { label: "Vừa tạo", variant: "secondary" },
   PENDING: { label: "Đang chờ", variant: "secondary" },
@@ -33,12 +34,15 @@ export const ProjectGrid = ({
   projects,
   isFetching,
   onEdit,
-  onDelete
+  setOpenDelete,
+  setSelectedProject,
 }: {
   projects: IProject[];
   isFetching: boolean;
   onEdit?: (project: IProject) => void;
   onDelete?: (project: IProject) => void;
+  setOpenDelete: (open: boolean) => void;
+  setSelectedProject: (project: IProject | null) => void;
 }) => {
   if (isFetching) {
     return (
@@ -68,30 +72,35 @@ export const ProjectGrid = ({
           >
             {/* Nút 3 chấm chỉ hiện khi hover */}
             <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 rounded-full bg-white/80 backdrop-blur hover:bg-gray-100"
-                  >
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40">
-                  <DropdownMenuItem onClick={() => onEdit?.(project)} className="cursor-pointer">
-                    <Edit className="mr-2 h-4 w-4" />
-                    Chỉnh sửa
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => onDelete?.(project)}
-                    className="cursor-pointer text-red-600 focus:text-red-600"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Xóa dự án
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {isDirector() && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 rounded-full bg-white/80 backdrop-blur hover:bg-gray-100"
+                    >
+                      <MoreVertical className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuItem onClick={() => onEdit?.(project)} className="cursor-pointer">
+                      <Edit className="mr-2 h-4 w-4" />
+                      Chỉnh sửa
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setSelectedProject(project);
+                        setOpenDelete(true);
+                      }}
+                      className="cursor-pointer text-red-600 focus:text-red-600"
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Xóa dự án
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
 
             <CardHeader className="pb-3">
