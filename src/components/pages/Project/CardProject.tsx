@@ -7,6 +7,7 @@ import { MoreVertical, Edit, Trash2 } from "lucide-react"
 import { type IProject } from "@/types/project"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { isDirector } from "@/utils/role"
+import { Link } from "react-router-dom"
 const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "outline" }> = {
   CREATED: { label: "Vừa tạo", variant: "secondary" },
   PENDING: { label: "Đang chờ", variant: "secondary" },
@@ -70,69 +71,70 @@ export const ProjectGrid = ({
                        hover:shadow-xl hover:border-gray-300 hover:-translate-y-1.5
                        transition-all duration-300 overflow-hidden"
           >
-            {/* Nút 3 chấm chỉ hiện khi hover */}
-            <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-              {isDirector() && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 rounded-full bg-white/80 backdrop-blur hover:bg-gray-100"
-                    >
-                      <MoreVertical className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem onClick={() => onEdit?.(project)} className="cursor-pointer">
-                      <Edit className="mr-2 h-4 w-4" />
-                      Chỉnh sửa
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        setSelectedProject(project);
-                        setOpenDelete(true);
-                      }}
-                      className="cursor-pointer text-red-600 focus:text-red-600"
-                    >
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Xóa dự án
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-            </div>
-
-            <CardHeader className="pb-3">
-              <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl w-full h-40 mb-4" />
-
-              <CardTitle className="text-lg font-medium text-gray-900 line-clamp-1 pr-10">
-                {project.name || "Chưa đặt tên"}
-              </CardTitle>
-              <CardDescription className="text-sm text-gray-600 line-clamp-2">
-                {project.client ? `Khách hàng: ${project.client}` : "Chưa có khách hàng"}
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="pt-2 space-y-3">
-              <div className="flex items-center justify-between">
-                <Badge variant={status.variant} className="text-xs font-medium">
-                  {status.label}
-                </Badge>
-                <span className="text-xs text-gray-500">
-                  {project.taskCount} công việc
-                </span>
+            <Link to={`/project/${project.id}`}>
+              <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                {isDirector() && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 rounded-full bg-white/80 backdrop-blur hover:bg-gray-100"
+                      >
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-40">
+                      <DropdownMenuItem onClick={() => onEdit?.(project)} className="cursor-pointer">
+                        <Edit className="mr-2 h-4 w-4" />
+                        Chỉnh sửa
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setSelectedProject(project);
+                          setOpenDelete(true);
+                        }}
+                        className="cursor-pointer text-red-600 focus:text-red-600"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Xóa dự án
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </div>
 
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                  {project.owner.charAt(0).toUpperCase()}
+              <CardHeader className="pb-3">
+                <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl w-full h-40 mb-4" />
+
+                <CardTitle className="text-lg font-medium text-gray-900 line-clamp-1 pr-10">
+                  {project.name || "Chưa đặt tên"}
+                </CardTitle>
+                <CardDescription className="text-sm text-gray-600 line-clamp-2">
+                  {project.client ? `Khách hàng: ${project.client}` : "Chưa có khách hàng"}
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="pt-2 space-y-3">
+                <div className="flex items-center justify-between">
+                  <Badge variant={status.variant} className="text-xs font-medium">
+                    {status.label}
+                  </Badge>
+                  <span className="text-xs text-gray-500">
+                    {project.taskCount} công việc
+                  </span>
                 </div>
-                <span className="text-xs text-gray-600 truncate">
-                  {project.owner.split("@")[0]}
-                </span>
-              </div>
-            </CardContent>
+
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+                    {project.owner.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-xs text-gray-600 truncate">
+                    {project.owner.split("@")[0]}
+                  </span>
+                </div>
+              </CardContent>
+            </Link>
           </Card>
         )
       })}

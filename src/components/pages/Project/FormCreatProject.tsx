@@ -55,4 +55,3 @@ export const ProjectFormContent = () => {
     </div>
   );
 };
-STATUS_PROJECT
