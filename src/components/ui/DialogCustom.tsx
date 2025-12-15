@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import type { ReactNode } from "react";
+import { Loader2 } from "lucide-react";
 
 interface CustomModalProps {
   open: boolean;
@@ -20,7 +21,7 @@ interface CustomModalProps {
   cancelText?: string;
   onConfirm?: () => void;
   onCancel?: () => void;
-  loading?: boolean;
+  isLoading?: boolean;
 }
 
 export function CustomModal({
@@ -33,7 +34,7 @@ export function CustomModal({
   cancelText = "Cancel",
   onConfirm,
   onCancel,
-  loading = false,
+  isLoading = false,
 }: CustomModalProps) {
   const handleConfirm = () => {
     onConfirm?.();
@@ -58,8 +59,8 @@ export function CustomModal({
               {cancelText}
             </Button>
           </DialogClose>
-          <Button onClick={handleConfirm} disabled={loading}>
-            {loading ? "Saving..." : confirmText}
+          <Button onClick={handleConfirm} disabled={isLoading}>
+            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : confirmText}
           </Button>
         </DialogFooter>
       </DialogContent>

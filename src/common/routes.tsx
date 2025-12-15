@@ -4,6 +4,7 @@ import RegisterForm from '@/pages/Auth/Register';
 import Dashboard from '@/pages/Dashboard';
 import { URL_PATH } from './url';
 import Project from '@/pages/Project';
+import { ProjectDetail } from '@/pages/Project/ProjectDetail';
 type ExtendedRoute = RouteProps & {
   permissions?: string[]; // Permissions required for the route
 };
@@ -27,5 +28,9 @@ export const privateRoutes: ExtendedRoute[] = [
   {
     path: URL_PATH.PROJECT,
     element: <Project />,
+  },
+  {
+    path: URL_PATH.PROJECT_DETAIL,
+    element: <ProjectDetail />,
   },
 ];

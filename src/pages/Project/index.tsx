@@ -162,7 +162,7 @@ export default function Projects() {
           description={mode === 'create' ? "Nhập thông tin dự án." : "Cập nhật thông tin dự án."}
           confirmText={mode === 'create' ? "Tạo dự án" : "Lưu thay đổi"}
           onConfirm={form.handleSubmit(onSubmit)}
-          loading={mode === 'create' ? isPending : isUpdatePending}
+          isLoading={mode === 'create' ? isPending : isUpdatePending}
         >
           <ProjectFormContent />
         </CustomModal>
@@ -174,7 +174,7 @@ export default function Projects() {
         description={`Bạn có chắc chắn muốn xóa dự án ${selectedProject?.name}?`}
         confirmText="Xóa"
         onConfirm={handleDelete}
-        loading={isDeletePending}
+        isLoading={isDeletePending}
       >
         <p>Khi xoá dự án sẽ không thể khôi phục lại</p>
       </CustomModal>

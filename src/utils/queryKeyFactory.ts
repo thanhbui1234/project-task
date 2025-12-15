@@ -1,5 +1,7 @@
 const BASE_KEYS = {
   PROJECTS: 'projects',
+  EMPLOYEES: 'employees',
+  TASKS: 'tasks',
 } as const;
 
 const QUERY_KEY_TYPE = {
@@ -43,5 +45,6 @@ const createQueryKeys = (baseKeyType: BaseKeyTypes): QueryKeyFactory => {
 };
 
 const projectKeys = createQueryKeys('PROJECTS');
-
-export { projectKeys };
+const employeeKeys = createQueryKeys('EMPLOYEES');
+const taskKeys = createQueryKeys('TASKS');
+export { projectKeys, employeeKeys, taskKeys };

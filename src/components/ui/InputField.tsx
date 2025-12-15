@@ -9,6 +9,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { motion } from "framer-motion"
+import { Textarea } from "./textarea"
 
 interface InputFieldProps<T extends FieldValues> {
   control?: Control<T>
@@ -18,6 +19,7 @@ interface InputFieldProps<T extends FieldValues> {
   type?: string
   placeholder?: string
   errors?: FieldErrors<T>
+  textarea?: boolean
 }
 
 export function InputField<T extends FieldValues>({
@@ -28,6 +30,7 @@ export function InputField<T extends FieldValues>({
   type = "text",
   placeholder,
   errors,
+  textarea = false,
 }: InputFieldProps<T>) {
   const errorMessage = errors?.[name]?.message as string | undefined
 
@@ -67,13 +70,23 @@ export function InputField<T extends FieldValues>({
         <Label htmlFor={name}>{label}</Label>
 
         <motion.div whileFocus={{ scale: 1.01 }}>
-          <Input
+          {!textarea && (
+            <Input
             id={name}
             type={type}
             placeholder={placeholder}
             aria-invalid={!!errorMessage}
             {...register(name)}
           />
+          )}
+          {textarea && ( 
+            <Textarea
+              id={name}
+              placeholder={placeholder}
+              aria-invalid={!!errorMessage}
+              {...register(name)}
+            />
+          )}
         </motion.div>
 
         {errorMessage && (

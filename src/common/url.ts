@@ -6,6 +6,7 @@ const PUBLIC_PATH = {
 const PRIVATE_PATH = {
   DASHBOARD: '/dashboard',
   PROJECT: '/project',
+  PROJECT_DETAIL: '/project/:id',
 };
 
 const URL_PATH = {
