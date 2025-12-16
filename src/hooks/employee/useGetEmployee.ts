@@ -35,13 +35,15 @@ import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { API_ENDPOINTS } from '@/common/apiEndpoints';
 import { employeeKeys } from '@/utils/queryKeyFactory';
-import type {  IEmployeeResponse } from '@/types/employee';
+import type { IEmployeeResponse } from '@/types/employee';
 
 export const useGetEmployee = () => {
   return useQuery<IEmployeeResponse, Error>({
     queryKey: employeeKeys.all(),
     queryFn: async () => {
-      const response = await api.get<IEmployeeResponse>(API_ENDPOINTS.GET_EMPLOYEES);
+      const response = await api.get<IEmployeeResponse>(
+        API_ENDPOINTS.GET_EMPLOYEES
+      );
       return response as unknown as IEmployeeResponse;
     },
   });

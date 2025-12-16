@@ -1,52 +1,77 @@
-import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table"
-import React from "react"
-import { Input } from "../input"
+import type {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+} from '@tanstack/react-table';
+import React from 'react';
+import { Input } from '../input';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
-} from "@/components/ui/dropdown-menu"
-import { Button } from "../button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../table"
-import { useReactTable } from "@tanstack/react-table"
-import { getCoreRowModel, getFilteredRowModel, getSortedRowModel } from "@tanstack/react-table"
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react"
-import { flexRender } from "@tanstack/react-table"
-import type { Meta } from "@/types/meta"
+} from '@/components/ui/dropdown-menu';
+import { Button } from '../button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '../table';
+import { useReactTable } from '@tanstack/react-table';
+import {
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+} from '@tanstack/react-table';
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from 'lucide-react';
+import { flexRender } from '@tanstack/react-table';
+import type { Meta } from '@/types/meta';
 
 interface DataTableProps<TData> {
-  columns: ColumnDef<TData, unknown>[]
-  data: TData[]
-  onAdd?: () => void
-  addButtonText?: string
-  searchPlaceholder?: string
-  searchColumn?: string
+  columns: ColumnDef<TData, unknown>[];
+  data: TData[];
+  onAdd?: () => void;
+  addButtonText?: string;
+  searchPlaceholder?: string;
+  searchColumn?: string;
   // Server-side pagination props
-  meta?: Meta
-  onPageChange?: (page: number) => void
-  isLoading?: boolean
+  meta?: Meta;
+  onPageChange?: (page: number) => void;
+  isLoading?: boolean;
   // Custom meta for columns (e.g., employees list)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tableMeta?: Record<string, any>
+  tableMeta?: Record<string, any>;
 }
 
 export function DataTableDemo<TData>({
   columns,
   data,
   onAdd,
-  addButtonText = "Thêm mới",
-  searchPlaceholder = "Tìm kiếm...",
-  searchColumn = "name",
+  addButtonText = 'Thêm mới',
+  searchPlaceholder = 'Tìm kiếm...',
+  searchColumn = 'name',
   meta,
   onPageChange,
   isLoading = false,
   tableMeta,
 }: DataTableProps<TData>) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data,
@@ -67,40 +92,42 @@ export function DataTableDemo<TData>({
       rowSelection,
     },
     meta: tableMeta,
-  })
+  });
 
   // Server-side pagination handlers
   const handlePreviousPage = () => {
     if (meta && meta.hasPreviousPage && onPageChange) {
-      onPageChange(meta.page - 1)
+      onPageChange(meta.page - 1);
     }
-  }
+  };
 
   const handleNextPage = () => {
     if (meta && meta.hasNextPage && onPageChange) {
-      onPageChange(meta.page + 1)
+      onPageChange(meta.page + 1);
     }
-  }
+  };
 
   const handleFirstPage = () => {
     if (onPageChange) {
-      onPageChange(1)
+      onPageChange(1);
     }
-  }
+  };
 
   const handleLastPage = () => {
     if (meta && onPageChange) {
-      onPageChange(meta.totalPage)
+      onPageChange(meta.totalPage);
     }
-  }
+  };
 
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center py-4 gap-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3 py-4">
           <Input
             placeholder={searchPlaceholder}
-            value={(table.getColumn(searchColumn)?.getFilterValue() as string) ?? ""}
+            value={
+              (table.getColumn(searchColumn)?.getFilterValue() as string) ?? ''
+            }
             onChange={(event) =>
               table.getColumn(searchColumn)?.setFilterValue(event.target.value)
             }
@@ -128,7 +155,7 @@ export function DataTableDemo<TData>({
                     >
                       {column.id}
                     </DropdownMenuCheckboxItem>
-                  )
+                  );
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
@@ -150,11 +177,11 @@ export function DataTableDemo<TData>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -173,7 +200,7 @@ export function DataTableDemo<TData>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -206,14 +233,14 @@ export function DataTableDemo<TData>({
             </>
           ) : (
             <>
-              {table.getFilteredSelectedRowModel().rows.length} / {" "}
+              {table.getFilteredSelectedRowModel().rows.length} /{' '}
               {table.getFilteredRowModel().rows.length} hàng được chọn.
             </>
           )}
         </div>
         <div className="flex items-center gap-2">
           {meta && (
-            <span className="text-sm text-muted-foreground">
+            <span className="text-muted-foreground text-sm">
               Trang {meta.page} / {meta.totalPage}
             </span>
           )}
@@ -258,5 +285,5 @@ export function DataTableDemo<TData>({
         </div>
       </div>
     </div>
-  )
+  );
 }

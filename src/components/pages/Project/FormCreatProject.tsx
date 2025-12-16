@@ -1,12 +1,21 @@
 // components/pages/Project/FormCreateProject.tsx
-import { InputField } from "@/components/ui/InputField";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useFormContext, Controller } from "react-hook-form";
-import { STATUS_PROJECT } from "@/consts/statusProject";
+import { InputField } from '@/components/ui/InputField';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useFormContext, Controller } from 'react-hook-form';
+import { STATUS_PROJECT } from '@/consts/statusProject';
 
 export const ProjectFormContent = () => {
-  const { control, formState: { errors } } = useFormContext();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <div className="grid gap-5 py-4">
@@ -38,9 +47,13 @@ export const ProjectFormContent = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={STATUS_PROJECT.CREATED}>Bắt đầu</SelectItem>
-                <SelectItem value={STATUS_PROJECT.IN_PROGRESS}>Đang thực hiện</SelectItem>
+                <SelectItem value={STATUS_PROJECT.IN_PROGRESS}>
+                  Đang thực hiện
+                </SelectItem>
                 <SelectItem value={STATUS_PROJECT.PENDING}>Đang chờ</SelectItem>
-                <SelectItem value={STATUS_PROJECT.COMPLETED}>Hoàn thành</SelectItem>
+                <SelectItem value={STATUS_PROJECT.COMPLETED}>
+                  Hoàn thành
+                </SelectItem>
               </SelectContent>
             </Select>
           )}
@@ -51,7 +64,6 @@ export const ProjectFormContent = () => {
           </p>
         )}
       </div>
-
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import type { Meta } from "./meta";
+import type { Meta } from './meta';
 
 export interface IEmployee {
   id: string;

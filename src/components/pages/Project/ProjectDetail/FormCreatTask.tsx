@@ -1,31 +1,31 @@
 // components/pages/Project/FormCreateTask.tsx
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Controller, useFormContext } from "react-hook-form";
+import { motion } from 'framer-motion';
+import { Controller, useFormContext } from 'react-hook-form';
 
-import { InputField } from "@/components/ui/InputField";
-import { InputDatepicker } from "@/components/ui/InputDatepicker";
-import { Label } from "@/components/ui/label";
+import { InputField } from '@/components/ui/InputField';
+import { InputDatepicker } from '@/components/ui/InputDatepicker';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
-import { STATUS_TASK } from "@/consts/statusProject";
-import type { IEmployee } from "@/types/employee";
+import { STATUS_TASK } from '@/consts/statusProject';
+import type { IEmployee } from '@/types/employee';
 
 export const FormCreatTask = ({
   mode,
   employees,
 }: {
-  mode: "create" | "update";
+  mode: 'create' | 'update';
   employees: IEmployee[];
 }) => {
-  const isUpdate = mode === "update";
+  const isUpdate = mode === 'update';
   const {
     control,
     formState: { errors },
@@ -35,7 +35,7 @@ export const FormCreatTask = ({
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, ease: "easeOut" }}
+      transition={{ duration: 0.25, ease: 'easeOut' }}
       className="grid gap-6 py-4"
     >
       {/* ===== BASIC INFO ===== */}
@@ -94,7 +94,7 @@ export const FormCreatTask = ({
             )}
           />
           {errors.status && (
-            <p className="text-xs text-destructive">
+            <p className="text-destructive text-xs">
               {errors.status.message as string}
             </p>
           )}
@@ -106,10 +106,7 @@ export const FormCreatTask = ({
             control={control}
             name="assignedTo"
             render={({ field }) => (
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-              >
+              <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
                   <SelectValue placeholder="Chọn người được giao" />
                 </SelectTrigger>
@@ -124,7 +121,7 @@ export const FormCreatTask = ({
             )}
           />
           {errors.assignedTo && (
-            <p className="text-xs text-destructive">
+            <p className="text-destructive text-xs">
               {errors.assignedTo.message as string}
             </p>
           )}
@@ -139,14 +136,11 @@ export const FormCreatTask = ({
             control={control}
             name="startAt"
             render={({ field }) => (
-              <InputDatepicker
-                value={field.value}
-                onChange={field.onChange}
-              />
+              <InputDatepicker value={field.value} onChange={field.onChange} />
             )}
           />
           {errors.startAt && (
-            <p className="text-xs text-destructive">
+            <p className="text-destructive text-xs">
               {errors.startAt.message as string}
             </p>
           )}
@@ -158,14 +152,11 @@ export const FormCreatTask = ({
             control={control}
             name="endAt"
             render={({ field }) => (
-              <InputDatepicker
-                value={field.value}
-                onChange={field.onChange}
-              />
+              <InputDatepicker value={field.value} onChange={field.onChange} />
             )}
           />
           {errors.endAt && (
-            <p className="text-xs text-destructive">
+            <p className="text-destructive text-xs">
               {errors.endAt.message as string}
             </p>
           )}
