@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/select';
 import { useFormContext, Controller } from 'react-hook-form';
 import { STATUS_PROJECT } from '@/consts/statusProject';
+import { InputDatepicker } from '@/components/ui/InputDatepicker';
 
 export const ProjectFormContent = () => {
   const {
@@ -41,12 +42,11 @@ export const ProjectFormContent = () => {
           control={control}
           name="status"
           render={({ field }) => (
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <Select onValueChange={field.onChange} value={field.value}>
               <SelectTrigger>
                 <SelectValue placeholder="Chọn trạng thái" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={STATUS_PROJECT.CREATED}>Bắt đầu</SelectItem>
                 <SelectItem value={STATUS_PROJECT.IN_PROGRESS}>
                   Đang thực hiện
                 </SelectItem>
@@ -63,6 +63,47 @@ export const ProjectFormContent = () => {
             {errors.status.message as string}
           </p>
         )}
+
+        {/* ===== DATES ===== */}
+        <div className="mt-5 flex flex-col gap-4">
+          <div className="grid gap-2">
+            <Label>Ngày bắt đầu</Label>
+            <Controller
+              control={control}
+              name="startAt"
+              render={({ field }) => (
+                <InputDatepicker
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            {errors.startAt && (
+              <p className="text-destructive text-xs">
+                {errors.startAt.message as string}
+              </p>
+            )}
+          </div>
+
+          <div className="grid gap-2">
+            <Label>Ngày kết thúc</Label>
+            <Controller
+              control={control}
+              name="endAt"
+              render={({ field }) => (
+                <InputDatepicker
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            {errors.endAt && (
+              <p className="text-destructive text-xs">
+                {errors.endAt.message as string}
+              </p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

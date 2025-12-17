@@ -6,6 +6,9 @@ export interface IProject {
   status: string;
   owner: string;
   taskCount: number;
+  createdAt: number;
+  startAt: number;
+  endAt: number;
 }
 
 export interface IProjectResponse {

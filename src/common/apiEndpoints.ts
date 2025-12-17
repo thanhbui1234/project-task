@@ -10,6 +10,9 @@ export const API_ENDPOINTS = {
   // Task
   CREATE_TASK: '/project/task',
   GET_TASKS: '/project/tasks',
+  DELETE_TASK: '/project/task',
+  UPDATE_TASK: '/project/task',
+  GET_TASK_DETAIL: '/project/task/detail',
   // Employee
   GET_EMPLOYEES: '/user/employees',
 };

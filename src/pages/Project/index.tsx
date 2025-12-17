@@ -17,6 +17,7 @@ import { useUpdateProject } from '@/hooks/project/useUpdateProject';
 import { ProjectGrid } from '@/components/pages/Project/CardProject';
 import type { registerType } from '@/schemas/auth';
 import type { IProject } from '@/types/project';
+import { STATUS_PROJECT } from '@/consts/statusProject';
 
 export default function Projects() {
   const [openModal, setOpenModal] = useState(false);
@@ -82,7 +83,9 @@ export default function Projects() {
     defaultValues: {
       name: '',
       client: '',
-      status: '',
+      status: STATUS_PROJECT.PENDING,
+      startAt: '',
+      endAt: '',
     },
   });
 

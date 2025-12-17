@@ -172,7 +172,7 @@ export const taskColumns: ColumnDef<ITask>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-600"
-              onClick={() => onDelete?.(row.original.id)}
+              onClick={() => console.log('hello', row.original.id)}
             >
               Xóa
             </DropdownMenuItem>

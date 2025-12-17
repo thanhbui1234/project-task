@@ -51,6 +51,7 @@ interface DataTableProps<TData> {
   // Custom meta for columns (e.g., employees list)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tableMeta?: Record<string, any>;
+  onRowClick?: (row: TData) => void;
 }
 
 export function DataTableDemo<TData>({
@@ -64,6 +65,7 @@ export function DataTableDemo<TData>({
   onPageChange,
   isLoading = false,
   tableMeta,
+  onRowClick,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -201,6 +203,19 @@ export function DataTableDemo<TData>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
+                  className={
+                    onRowClick
+                      ? 'hover:bg-muted/50 cursor-pointer hover:cursor-pointer'
+                      : ''
+                  }
+                  onClick={(e) => {
+                    if (!onRowClick) return;
+
+                    const target = e.target as HTMLElement;
+                    if (target.closest('[data-no-row-click]')) return;
+
+                    onRowClick(row.original);
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

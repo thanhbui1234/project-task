@@ -8,8 +8,14 @@ interface IProjectDetailResponse {
   name: string;
   client: string;
   status: string;
-  owner: string;
   taskCount: number;
+  createdAt: number;
+  startAt: number | null;
+  endAt: number | null;
+  startedCount: number;
+  acceptedCount: number;
+  inProgressCount: number;
+  completedCount: number;
 }
 export const useGetProjectDetail = (id: string) => {
   return useQuery<IProjectDetailResponse, Error>({

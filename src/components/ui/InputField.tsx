@@ -45,13 +45,22 @@ export function InputField<T extends FieldValues>({
           control={control}
           render={({ field }) => (
             <motion.div whileFocus={{ scale: 1.01 }}>
-              <Input
-                {...field}
-                id={name}
-                type={type}
-                placeholder={placeholder}
-                aria-invalid={!!errorMessage}
-              />
+              {!textarea ? (
+                <Input
+                  {...field}
+                  id={name}
+                  type={type}
+                  placeholder={placeholder}
+                  aria-invalid={!!errorMessage}
+                />
+              ) : (
+                <Textarea
+                  {...field}
+                  id={name}
+                  placeholder={placeholder}
+                  aria-invalid={!!errorMessage}
+                />
+              )}
             </motion.div>
           )}
         />
