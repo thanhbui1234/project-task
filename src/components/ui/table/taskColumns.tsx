@@ -153,7 +153,7 @@ export const taskColumns: ColumnDef<ITask>[] = [
           return priority;
       }
     },
-  },  
+  },
   {
     accessorKey: 'startAt',
     header: 'Ngày bắt đầu',

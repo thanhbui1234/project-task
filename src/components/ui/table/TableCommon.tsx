@@ -69,7 +69,7 @@ export function DataTableDemo<TData>({
   onRowClick,
   showFilter = true,
 }: DataTableProps<TData>) {
-  console.log('meta 1', meta)
+  console.log('meta 1', meta);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -107,7 +107,7 @@ export function DataTableDemo<TData>({
   };
 
   const handleNextPage = () => {
-    console.log('meta', meta)
+    console.log('meta', meta);
     if (meta && meta.hasNextPage && onPageChange) {
       onPageChange(meta.page + 1);
     }
@@ -126,17 +126,20 @@ export function DataTableDemo<TData>({
   };
 
   return (
-    <div className="w-full ">
+    <div className="w-full">
       {showFilter && (
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 py-4">
             <Input
               placeholder={searchPlaceholder}
               value={
-                (table.getColumn(searchColumn)?.getFilterValue() as string) ?? ''
+                (table.getColumn(searchColumn)?.getFilterValue() as string) ??
+                ''
               }
               onChange={(event) =>
-                table.getColumn(searchColumn)?.setFilterValue(event.target.value)
+                table
+                  .getColumn(searchColumn)
+                  ?.setFilterValue(event.target.value)
               }
               className="max-w-sm"
             />
@@ -185,9 +188,9 @@ export function DataTableDemo<TData>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}

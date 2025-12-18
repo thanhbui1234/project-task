@@ -23,7 +23,7 @@ export function useGetSlowProject({
         params: {
           page,
           take,
-          type: 'SLOW_PROCESS'
+          type: 'SLOW_PROCESS',
         },
       });
 

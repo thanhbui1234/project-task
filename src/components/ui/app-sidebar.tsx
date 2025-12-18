@@ -65,9 +65,7 @@ export function AppSidebar() {
                   >
                     <Link to={item.url}>
                       <item.icon />
-                      <span className="text-base ">
-                        {item.title}
-                      </span>
+                      <span className="text-base">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -83,13 +81,12 @@ export function AppSidebar() {
               size="lg"
               tooltip="Đăng xuất"
               onClick={() => {
-                logout(navigate)
+                logout(navigate);
               }}
             >
               <LogOut />
               <span className="truncate">Đăng xuất</span>
             </SidebarMenuButton>
-
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

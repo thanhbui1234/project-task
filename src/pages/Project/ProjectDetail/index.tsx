@@ -34,12 +34,32 @@ import { useGetProjectDetail } from '@/hooks/project/useGetProjectDetail';
 
 const statusConfig: Record<
   string,
-  { label: string; variant: 'default' | 'secondary' | 'outline'; className: string }
+  {
+    label: string;
+    variant: 'default' | 'secondary' | 'outline';
+    className: string;
+  }
 > = {
-  CREATED: { label: 'Vừa tạo', variant: 'secondary', className: 'bg-slate-100 text-slate-700' },
-  PENDING: { label: 'Đang chờ', variant: 'secondary', className: 'bg-amber-100 text-amber-700' },
-  IN_PROGRESS: { label: 'Đang thực hiện', variant: 'default', className: 'bg-blue-100 text-blue-700' },
-  COMPLETED: { label: 'Hoàn thành', variant: 'outline', className: 'bg-emerald-100 text-emerald-700' },
+  CREATED: {
+    label: 'Vừa tạo',
+    variant: 'secondary',
+    className: 'bg-slate-100 text-slate-700',
+  },
+  PENDING: {
+    label: 'Đang chờ',
+    variant: 'secondary',
+    className: 'bg-amber-100 text-amber-700',
+  },
+  IN_PROGRESS: {
+    label: 'Đang thực hiện',
+    variant: 'default',
+    className: 'bg-blue-100 text-blue-700',
+  },
+  COMPLETED: {
+    label: 'Hoàn thành',
+    variant: 'outline',
+    className: 'bg-emerald-100 text-emerald-700',
+  },
 };
 
 const formatDate = (timestamp: number | null | undefined) => {
@@ -117,7 +137,8 @@ export const ProjectDetail = () => {
                       <Badge
                         className={`${statusConfig[projectDetail?.status ?? '']?.className ?? 'bg-gray-100 text-gray-700'} border-0 px-3 py-1 text-xs font-medium`}
                       >
-                        {statusConfig[projectDetail?.status ?? '']?.label ?? projectDetail?.status}
+                        {statusConfig[projectDetail?.status ?? '']?.label ??
+                          projectDetail?.status}
                       </Badge>
                     </div>
                   </div>
@@ -134,7 +155,8 @@ export const ProjectDetail = () => {
                     <Calendar className="h-4 w-4 text-gray-400" />
                     <span className="font-medium">Thời gian:</span>
                     <span>
-                      {formatDate(projectDetail?.startAt)} - {formatDate(projectDetail?.endAt)}
+                      {formatDate(projectDetail?.startAt)} -{' '}
+                      {formatDate(projectDetail?.endAt)}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">

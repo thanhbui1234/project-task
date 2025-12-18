@@ -54,17 +54,17 @@ export const auth = {
     useAuthStore.getState().login(user);
   },
   logout: () => {
-    useAuthStore.getState().logout()
-    clearAuth()
+    useAuthStore.getState().logout();
+    clearAuth();
   },
 };
 
 export function logout(navigate: any) {
-  useAuthStore.getState().logout()
-  clearAuth()
+  useAuthStore.getState().logout();
+  clearAuth();
   if (navigate) {
-    navigate('/login')
+    navigate('/login');
   } else {
-    window.location.href = '/login'
+    window.location.href = '/login';
   }
 }

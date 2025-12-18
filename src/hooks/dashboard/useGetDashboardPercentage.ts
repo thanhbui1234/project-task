@@ -4,7 +4,6 @@ import { API_ENDPOINTS } from '@/common/apiEndpoints';
 import { dashboardPercentageKeys } from '@/utils/queryKeyFactory';
 
 export interface IDashboardPercentageResponse {
-
   rightProcessTasksCount: number;
   slowProcessTasksCount: number;
   startedTasksCount: number;

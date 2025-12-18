@@ -207,7 +207,6 @@
 //   );
 // };
 
-
 // const containerVariants = {
 //   hidden: { opacity: 0 },
 //   visible: {
@@ -218,7 +217,6 @@
 //     },
 //   },
 // } as const;
-
 
 // const sidebarItemVariants = {
 //   hidden: { opacity: 0, x: 20 },

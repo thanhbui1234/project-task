@@ -61,12 +61,15 @@ import {
   User,
 } from 'lucide-react';
 
-import { PRIORITY_CONFIG_TASK, STATUS_TASK, PRIORITY_TASK } from '@/consts/task';
+import {
+  PRIORITY_CONFIG_TASK,
+  STATUS_TASK,
+  PRIORITY_TASK,
+} from '@/consts/task';
 import { STATUS_CONFIG_TASK } from '@/consts/task';
 import { toast } from 'sonner';
 
 // Status config with colors and icons
-
 
 const getStatusConfig = (status?: string) => {
   if (!status || !STATUS_CONFIG_TASK[status]) {
@@ -92,7 +95,6 @@ const getInitials = (name: string | null) => {
 };
 
 // Animation variants
-
 
 export const TaskDetail = () => {
   const { id: taskId, projectId } = useParams();
@@ -192,18 +194,18 @@ export const TaskDetail = () => {
   };
   const handleOpenInNewTab = () => {
     window.open(window.location.href, '_blank');
-  }
+  };
 
   const handleMarkComplete = () => {
     handleStatusChange(STATUS_TASK.COMPLETED);
   };
-  const location = useLocation()
+  const location = useLocation();
 
   const handleCopyLink = async () => {
-    const url = `${window.location.origin}${location.pathname}${location.search}`
-    await navigator.clipboard.writeText(url)
-    toast.success("Đã copy liên kết")
-  }
+    const url = `${window.location.origin}${location.pathname}${location.search}`;
+    await navigator.clipboard.writeText(url);
+    toast.success('Đã copy liên kết');
+  };
 
   const statusConfig = getStatusConfig(task?.status);
   const StatusIcon = statusConfig.icon;
@@ -285,9 +287,7 @@ export const TaskDetail = () => {
                 <Link to={`/project/${task.projectId}`}>{'Dự án'}</Link>
               </span>
               <span className="text-muted-foreground">/</span>
-              <span className="text-foreground font-semibold">
-                {task.name}
-              </span>
+              <span className="text-foreground font-semibold">{task.name}</span>
             </nav>
           </div>
 
@@ -365,8 +365,15 @@ export const TaskDetail = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <div className="text-sm font-medium">
-                    Độ ưu tiên: <Badge className={`${PRIORITY_CONFIG_TASK[task?.priority as keyof typeof PRIORITY_CONFIG_TASK]?.bgLight} ${PRIORITY_CONFIG_TASK[task?.priority as keyof typeof PRIORITY_CONFIG_TASK]?.textColor} border-0 font-medium`}>
-                      {PRIORITY_CONFIG_TASK[task?.priority as keyof typeof PRIORITY_CONFIG_TASK]?.label}
+                    Độ ưu tiên:{' '}
+                    <Badge
+                      className={`${PRIORITY_CONFIG_TASK[task?.priority as keyof typeof PRIORITY_CONFIG_TASK]?.bgLight} ${PRIORITY_CONFIG_TASK[task?.priority as keyof typeof PRIORITY_CONFIG_TASK]?.textColor} border-0 font-medium`}
+                    >
+                      {
+                        PRIORITY_CONFIG_TASK[
+                          task?.priority as keyof typeof PRIORITY_CONFIG_TASK
+                        ]?.label
+                      }
                     </Badge>
                   </div>
                 </div>
@@ -478,12 +485,13 @@ export const TaskDetail = () => {
                         transition={{ duration: 0.2 }}
                       >
                         <div
-                          className={`prose prose-slate dark:prose-invert max-w-none ${!isDescriptionExpanded &&
+                          className={`prose prose-slate dark:prose-invert max-w-none ${
+                            !isDescriptionExpanded &&
                             task.description &&
                             task.description.length > 300
-                            ? 'line-clamp-4'
-                            : ''
-                            }`}
+                              ? 'line-clamp-4'
+                              : ''
+                          }`}
                         >
                           <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                             {task.description || (
@@ -632,13 +640,13 @@ export const TaskDetail = () => {
                         <span className="text-sm font-medium">
                           {task.startAt
                             ? new Date(task.startAt).toLocaleDateString(
-                              'vi-VN',
-                              {
-                                day: '2-digit',
-                                month: 'short',
-                                year: 'numeric',
-                              }
-                            )
+                                'vi-VN',
+                                {
+                                  day: '2-digit',
+                                  month: 'short',
+                                  year: 'numeric',
+                                }
+                              )
                             : '-'}
                         </span>
                         <Button
@@ -665,10 +673,10 @@ export const TaskDetail = () => {
                         <span className="text-sm font-medium">
                           {task.endAt
                             ? new Date(task.endAt).toLocaleDateString('vi-VN', {
-                              day: '2-digit',
-                              month: 'short',
-                              year: 'numeric',
-                            })
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                              })
                             : '-'}
                         </span>
                         <Button

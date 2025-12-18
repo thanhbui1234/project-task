@@ -1,21 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { API_ENDPOINTS } from '@/common/apiEndpoints';
-import { slowProjectKeys } from '@/utils/queryKeyFactory';
+import { myProjectKeys } from '@/utils/queryKeyFactory';
 import { DEFAULT_PAGE, TAKE_PAGE } from '@/consts/query';
 import type { ITaskResponse } from '@/types/task';
 
 interface GetTasksParams {
   page?: number;
   take?: number;
+  userId?: any;
 }
 
-export function useGetSlowProject({
+export function useGetMyProject({
   page = DEFAULT_PAGE,
   take = TAKE_PAGE,
+  userId,
 }: GetTasksParams) {
   return useQuery({
-    queryKey: slowProjectKeys.list({ page, take }),
+    queryKey: myProjectKeys.list({ page, take }),
     queryFn: async (): Promise<ITaskResponse> => {
       // Axios interceptor đã return response.data.data
       // Nên response ở đây đã là { docs, meta }
@@ -23,7 +25,7 @@ export function useGetSlowProject({
         params: {
           page,
           take,
-          type: 'SLOW_PROCESS'
+          userId: userId,
         },
       });
 

@@ -1,7 +1,7 @@
-"use client";
-import React, { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "motion/react";
-import { cn } from "@/lib/utils";
+'use client';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useInView } from 'motion/react';
+import { cn } from '@/lib/utils';
 
 type EncryptedTextProps = {
   text: string;
@@ -25,7 +25,7 @@ type EncryptedTextProps = {
 };
 
 const DEFAULT_CHARSET =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-={}[];:,.<>/?";
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-={}[];:,.<>/?';
 
 function generateRandomCharacter(charset: string): string {
   const index = Math.floor(Math.random() * charset.length);
@@ -34,13 +34,13 @@ function generateRandomCharacter(charset: string): string {
 
 function generateGibberishPreservingSpaces(
   original: string,
-  charset: string,
+  charset: string
 ): string {
-  if (!original) return "";
-  let result = "";
+  if (!original) return '';
+  let result = '';
   for (let i = 0; i < original.length; i += 1) {
     const ch = original[i];
-    result += ch === " " ? " " : generateRandomCharacter(charset);
+    result += ch === ' ' ? ' ' : generateRandomCharacter(charset);
   }
   return result;
 }
@@ -62,7 +62,7 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
   const startTimeRef = useRef<number>(0);
   const lastFlipTimeRef = useRef<number>(0);
   const scrambleCharsRef = useRef<string[]>(
-    text ? generateGibberishPreservingSpaces(text, charset).split("") : [],
+    text ? generateGibberishPreservingSpaces(text, charset).split('') : []
   );
 
   useEffect(() => {
@@ -71,8 +71,8 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
     // Reset state for a fresh animation whenever dependencies change
     const initial = text
       ? generateGibberishPreservingSpaces(text, charset)
-      : "";
-    scrambleCharsRef.current = initial.split("");
+      : '';
+    scrambleCharsRef.current = initial.split('');
     startTimeRef.current = performance.now();
     lastFlipTimeRef.current = startTimeRef.current;
     setRevealCount(0);
@@ -86,7 +86,7 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
       const totalLength = text.length;
       const currentRevealCount = Math.min(
         totalLength,
-        Math.floor(elapsedMs / Math.max(1, revealDelayMs)),
+        Math.floor(elapsedMs / Math.max(1, revealDelayMs))
       );
 
       setRevealCount(currentRevealCount);
@@ -100,11 +100,11 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
       if (timeSinceLastFlip >= Math.max(0, flipDelayMs)) {
         for (let index = 0; index < totalLength; index += 1) {
           if (index >= currentRevealCount) {
-            if (text[index] !== " ") {
+            if (text[index] !== ' ') {
               scrambleCharsRef.current[index] =
                 generateRandomCharacter(charset);
             } else {
-              scrambleCharsRef.current[index] = " ";
+              scrambleCharsRef.current[index] = ' ';
             }
           }
         }
@@ -133,12 +133,12 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
       aria-label={text}
       role="text"
     >
-      {text.split("").map((char, index) => {
+      {text.split('').map((char, index) => {
         const isRevealed = index < revealCount;
         const displayChar = isRevealed
           ? char
-          : char === " "
-            ? " "
+          : char === ' '
+            ? ' '
             : (scrambleCharsRef.current[index] ??
               generateRandomCharacter(charset));
 

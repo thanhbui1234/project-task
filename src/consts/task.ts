@@ -1,6 +1,4 @@
-import { CheckCircle2, CircleDot, CircleX, Play, Zap } from "lucide-react";
-
-
+import { CheckCircle2, CircleDot, CircleX, Play, Zap } from 'lucide-react';
 
 export const STATUS_TASK = {
   STARTED: 'STARTED', // Bắt đầu
@@ -8,7 +6,6 @@ export const STATUS_TASK = {
   IN_PROGRESS: 'IN_PROGRESS', // Đang thực hiện
   COMPLETED: 'COMPLETED', // Hoàn thành
 };
-
 
 export const STATUS_CONFIG_TASK = {
   [STATUS_TASK.STARTED]: {
@@ -40,8 +37,6 @@ export const STATUS_CONFIG_TASK = {
     icon: CheckCircle2,
   },
 };
-
-
 
 export const PRIORITY_TASK = {
   LOW: 'LOW',
