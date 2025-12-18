@@ -1,6 +1,7 @@
-import { Home, Command } from 'lucide-react';
+import { Home, Command, User, LogOut } from 'lucide-react';
 import { GoTasklist } from 'react-icons/go';
-
+import { logout } from '@/utils/auth';
+import { useNavigate } from 'react-router-dom';
 import {
   Sidebar,
   SidebarContent,
@@ -12,15 +13,18 @@ import {
   SidebarMenuItem,
   SidebarRail,
   SidebarHeader,
+  SidebarFooter,
 } from '@/components/ui/sidebar';
 import { Link, useLocation } from 'react-router-dom';
 import { URL_PATH } from '@/common/url';
 const items = [
-  { title: 'Home', url: URL_PATH.DASHBOARD, icon: Home },
+  { title: 'Trang chủ', url: URL_PATH.DASHBOARD, icon: Home },
   { title: 'Dự án của tôi', url: URL_PATH.PROJECT, icon: GoTasklist },
+  { title: 'Nhân viên', url: URL_PATH.EMPLOYEE, icon: User },
 ];
 
 export function AppSidebar() {
+  const navigate = useNavigate();
   const location = useLocation();
 
   return (
@@ -61,7 +65,9 @@ export function AppSidebar() {
                   >
                     <Link to={item.url}>
                       <item.icon />
-                      <span className="text-base">{item.title}</span>
+                      <span className="text-base ">
+                        {item.title}
+                      </span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -70,6 +76,24 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              size="lg"
+              tooltip="Đăng xuất"
+              onClick={() => {
+                logout(navigate)
+              }}
+            >
+              <LogOut />
+              <span className="truncate">Đăng xuất</span>
+            </SidebarMenuButton>
+
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
   );

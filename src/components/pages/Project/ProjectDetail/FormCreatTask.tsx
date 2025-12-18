@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-import { STATUS_TASK } from '@/consts/statusProject';
+import { PRIORITY_TASK, STATUS_TASK } from '@/consts/task';
 import type { IEmployee } from '@/types/employee';
 
 export const FormCreatTask = ({
@@ -39,13 +39,14 @@ export const FormCreatTask = ({
       className="grid gap-6 py-4"
     >
       {/* ===== BASIC INFO ===== */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 ">
         <InputField
           control={control}
           name="name"
           label="Tên công việc"
           placeholder="Nhập tên công việc"
           errors={errors}
+          className="w-full"
         />
 
         <div className="md:col-span-2">
@@ -62,43 +63,68 @@ export const FormCreatTask = ({
       </div>
 
       {/* ===== STATUS & ASSIGNEE ===== */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        <div className="grid gap-2">
-          <Label>Trạng thái</Label>
-          <Controller
-            disabled={!isUpdate}
-            control={control}
-            name="status"
-            render={({ field }) => (
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-                disabled={!isUpdate}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Chọn trạng thái" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={STATUS_TASK.STARTED}>Bắt đầu</SelectItem>
-                  <SelectItem value={STATUS_TASK.IN_PROGRESS}>
-                    Đang thực hiện
-                  </SelectItem>
-                  <SelectItem value={STATUS_TASK.ACCEPTED}>
-                    Đã nhận việc
-                  </SelectItem>
-                  <SelectItem value={STATUS_TASK.COMPLETED}>
-                    Hoàn thành
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          <div className="grid gap-2">
+            <Label>Trạng thái</Label>
+            <Controller
+              disabled={!isUpdate}
+              control={control}
+              name="status"
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  disabled={!isUpdate}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Chọn trạng thái" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={STATUS_TASK.STARTED}>Bắt đầu</SelectItem>
+                    <SelectItem value={STATUS_TASK.IN_PROGRESS}>
+                      Đang thực hiện
+                    </SelectItem>
+                    <SelectItem value={STATUS_TASK.ACCEPTED}>
+                      Đã nhận việc
+                    </SelectItem>
+                    <SelectItem value={STATUS_TASK.COMPLETED}>
+                      Hoàn thành
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.status && (
+              <p className="text-destructive text-xs">
+                {errors.status.message as string}
+              </p>
             )}
-          />
-          {errors.status && (
-            <p className="text-destructive text-xs">
-              {errors.status.message as string}
-            </p>
-          )}
-        </div>
+          </div>
+          <div className="grid gap-2">
+            <Label>Độ ưu tiên</Label>
+            <Controller
+              control={control}
+              name="priority"
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Chọn độ ưu tiên" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={PRIORITY_TASK.LOW}>Thấp</SelectItem>
+                    <SelectItem value={PRIORITY_TASK.MEDIUM}>Trung bình</SelectItem>
+                    <SelectItem value={PRIORITY_TASK.HIGH}>Cao</SelectItem>
+                    <SelectItem value={PRIORITY_TASK.VERY_HIGH}>Rất cao</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.priority && (
+              <p className="text-destructive text-xs">
+                {errors.priority.message as string}
+              </p>
+            )}
+          </div>
 
         <div className="grid gap-2">
           <Label>Người được giao</Label>
@@ -129,7 +155,7 @@ export const FormCreatTask = ({
       </div>
 
       {/* ===== DATES ===== */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 ">
         <div className="grid gap-2">
           <Label>Ngày bắt đầu</Label>
           <Controller

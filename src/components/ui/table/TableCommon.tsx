@@ -52,6 +52,7 @@ interface DataTableProps<TData> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tableMeta?: Record<string, any>;
   onRowClick?: (row: TData) => void;
+  showFilter?: boolean;
 }
 
 export function DataTableDemo<TData>({
@@ -66,7 +67,9 @@ export function DataTableDemo<TData>({
   isLoading = false,
   tableMeta,
   onRowClick,
+  showFilter = true,
 }: DataTableProps<TData>) {
+  console.log('meta 1', meta)
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -104,6 +107,7 @@ export function DataTableDemo<TData>({
   };
 
   const handleNextPage = () => {
+    console.log('meta', meta)
     if (meta && meta.hasNextPage && onPageChange) {
       onPageChange(meta.page + 1);
     }
@@ -122,52 +126,54 @@ export function DataTableDemo<TData>({
   };
 
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 py-4">
-          <Input
-            placeholder={searchPlaceholder}
-            value={
-              (table.getColumn(searchColumn)?.getFilterValue() as string) ?? ''
-            }
-            onChange={(event) =>
-              table.getColumn(searchColumn)?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                Cột <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="z-50">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+    <div className="w-full ">
+      {showFilter && (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3 py-4">
+            <Input
+              placeholder={searchPlaceholder}
+              value={
+                (table.getColumn(searchColumn)?.getFilterValue() as string) ?? ''
+              }
+              onChange={(event) =>
+                table.getColumn(searchColumn)?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  Cột <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="z-50">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          {onAdd && (
+            <Button variant="outline" size="sm" onClick={() => onAdd()}>
+              {addButtonText}
+            </Button>
+          )}
         </div>
-        {onAdd && (
-          <Button variant="outline" size="sm" onClick={() => onAdd()}>
-            {addButtonText}
-          </Button>
-        )}
-      </div>
+      )}
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -179,9 +185,9 @@ export function DataTableDemo<TData>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}

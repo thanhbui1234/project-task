@@ -5,6 +5,7 @@ import type { IUpdateTaskSchema } from '@/schemas/Project';
 import { taskKeys } from '@/utils/queryKeyFactory';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { taskDetailKeys } from '@/utils/queryKeyFactory';
 
 export const useUpdateTask = (projectId: string) => {
   const { mutate: updateTask, isPending } = useMutation<
@@ -20,13 +21,14 @@ export const useUpdateTask = (projectId: string) => {
         description: data.description,
         assignedTo: data.assignedTo,
         status: data.status,
+        priority: data.priority as string,
         startAt: data.startAt,
         endAt: data.endAt,
       }),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: taskKeys.list({ projectId }) });
       queryClient.invalidateQueries({
-        queryKey: taskKeys.detail(variables.taskId),
+        queryKey: taskDetailKeys.details(variables.taskId),
       });
       toast.success('Cập nhật công việc thành công');
     },

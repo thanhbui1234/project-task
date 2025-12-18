@@ -171,6 +171,7 @@ export const updateTaskSchema = z
     assignedTo: z.string().optional(),
     startAt: z.number().optional(),
     endAt: z.number().optional(),
+    priority: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.startAt && data.endAt) {

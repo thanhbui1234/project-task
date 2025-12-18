@@ -15,4 +15,8 @@ export const API_ENDPOINTS = {
   GET_TASK_DETAIL: '/project/task/detail',
   // Employee
   GET_EMPLOYEES: '/user/employees',
+  // Dashboard
+  GET_DASHBOARD: '/project/dashboard',
+  GET_DASHBOARD_PERCENTAGE: '/project/dashboard/percentage',
+  GET_SLOW_PROJECT: '/project/task/',
 };

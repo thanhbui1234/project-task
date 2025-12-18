@@ -31,7 +31,7 @@ export function CustomModal({
   description,
   children,
   confirmText = 'Confirm',
-  cancelText = 'Cancel',
+  cancelText = 'Hủy',
   onConfirm,
   onCancel,
   isLoading = false,

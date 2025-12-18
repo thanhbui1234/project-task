@@ -8,7 +8,7 @@ import {
   type TaskTableMeta,
 } from '@/components/ui/table/taskColumns';
 import { DataTableDemo } from '@/components/ui/table/TableCommon';
-import { STATUS_TASK } from '@/consts/statusProject';
+import { STATUS_TASK } from '@/consts/task';
 import { useGetEmployee } from '@/hooks/employee/useGetEmployee';
 import { useCreatTask } from '@/hooks/task/useCreateTask';
 import { useGetTasks } from '@/hooks/task/useGetTask';

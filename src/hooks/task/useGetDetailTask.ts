@@ -15,6 +15,7 @@ interface ITaskDetailResponse {
   projectId: string;
   startAt: string | null;
   endAt: string | null;
+  priority: string;
 }
 
 export function useGetDetailTask({ taskId }: GetDetailTaskParams) {

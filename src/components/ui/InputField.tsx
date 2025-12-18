@@ -20,6 +20,7 @@ interface InputFieldProps<T extends FieldValues> {
   placeholder?: string;
   errors?: FieldErrors<T>;
   textarea?: boolean;
+  className?: string;
 }
 
 export function InputField<T extends FieldValues>({
@@ -31,6 +32,7 @@ export function InputField<T extends FieldValues>({
   placeholder,
   errors,
   textarea = false,
+  className,
 }: InputFieldProps<T>) {
   const errorMessage = errors?.[name]?.message as string | undefined;
 
@@ -44,7 +46,7 @@ export function InputField<T extends FieldValues>({
           name={name}
           control={control}
           render={({ field }) => (
-            <motion.div whileFocus={{ scale: 1.01 }}>
+            <motion.div whileFocus={{ scale: 1.01 }} className={className}>
               {!textarea ? (
                 <Input
                   {...field}

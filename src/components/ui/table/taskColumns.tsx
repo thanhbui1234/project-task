@@ -12,7 +12,7 @@ import {
 import type { ColumnDef } from '@tanstack/react-table';
 import type { ITask } from '@/types/task';
 import type { IEmployee } from '@/types/employee';
-import { STATUS_TASK } from '@/consts/statusProject';
+import { PRIORITY_TASK, STATUS_TASK } from '@/consts/task';
 import { Badge } from '@/components/ui/badge';
 
 const getStatusLabel = (status: string) => {
@@ -135,6 +135,25 @@ export const taskColumns: ColumnDef<ITask>[] = [
       return <div>{getEmployeeName(assignedTo, employees)}</div>;
     },
   },
+  {
+    accessorKey: 'priority',
+    header: 'Độ ưu tiên',
+    cell: ({ row }) => {
+      const priority = row.getValue('priority') as string;
+      switch (priority) {
+        case PRIORITY_TASK.LOW:
+          return 'Thấp';
+        case PRIORITY_TASK.MEDIUM:
+          return 'Trung bình';
+        case PRIORITY_TASK.HIGH:
+          return 'Cao';
+        case PRIORITY_TASK.VERY_HIGH:
+          return 'Rất cao';
+        default:
+          return priority;
+      }
+    },
+  },  
   {
     accessorKey: 'startAt',
     header: 'Ngày bắt đầu',

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm, FormProvider, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -43,7 +43,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { STATUS_TASK } from '@/consts/statusProject';
 import { updateTaskSchema, type IUpdateTaskSchema } from '@/schemas/Project';
 import {
   ArrowLeft,
@@ -58,47 +57,19 @@ import {
   Link2,
   Loader2,
   MoreHorizontal,
-  Play,
-  Share2,
   Trash2,
   User,
-  Zap,
 } from 'lucide-react';
 
+import { PRIORITY_CONFIG_TASK, STATUS_TASK, PRIORITY_TASK } from '@/consts/task';
+import { STATUS_CONFIG_TASK } from '@/consts/task';
+import { toast } from 'sonner';
+
 // Status config with colors and icons
-const STATUS_CONFIG = {
-  [STATUS_TASK.STARTED]: {
-    label: 'Bắt đầu',
-    color: 'bg-slate-500',
-    bgLight: 'bg-slate-100 dark:bg-slate-800',
-    textColor: 'text-slate-700 dark:text-slate-300',
-    icon: Play,
-  },
-  [STATUS_TASK.ACCEPTED]: {
-    label: 'Đã nhận việc',
-    color: 'bg-blue-500',
-    bgLight: 'bg-blue-100 dark:bg-blue-900/40',
-    textColor: 'text-blue-700 dark:text-blue-300',
-    icon: CircleDot,
-  },
-  [STATUS_TASK.IN_PROGRESS]: {
-    label: 'Đang thực hiện',
-    color: 'bg-amber-500',
-    bgLight: 'bg-amber-100 dark:bg-amber-900/40',
-    textColor: 'text-amber-700 dark:text-amber-300',
-    icon: Zap,
-  },
-  [STATUS_TASK.COMPLETED]: {
-    label: 'Hoàn thành',
-    color: 'bg-emerald-500',
-    bgLight: 'bg-emerald-100 dark:bg-emerald-900/40',
-    textColor: 'text-emerald-700 dark:text-emerald-300',
-    icon: CheckCircle2,
-  },
-};
+
 
 const getStatusConfig = (status?: string) => {
-  if (!status || !STATUS_CONFIG[status]) {
+  if (!status || !STATUS_CONFIG_TASK[status]) {
     return {
       label: status ?? '-',
       color: 'bg-gray-400',
@@ -107,7 +78,7 @@ const getStatusConfig = (status?: string) => {
       icon: CircleDot,
     };
   }
-  return STATUS_CONFIG[status];
+  return STATUS_CONFIG_TASK[status];
 };
 
 const getInitials = (name: string | null) => {
@@ -121,50 +92,7 @@ const getInitials = (name: string | null) => {
 };
 
 // Animation variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.1,
-    },
-  },
-} as const;
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: 'spring' as const,
-      stiffness: 100,
-      damping: 15,
-    },
-  },
-};
-
-const sidebarItemVariants = {
-  hidden: { opacity: 0, x: 20 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      type: 'spring' as const,
-      stiffness: 100,
-      damping: 15,
-    },
-  },
-};
-
-const cardHoverVariants = {
-  rest: { scale: 1 },
-  hover: {
-    scale: 1.01,
-    transition: { duration: 0.2 },
-  },
-};
 
 export const TaskDetail = () => {
   const { id: taskId, projectId } = useParams();
@@ -197,6 +125,7 @@ export const TaskDetail = () => {
       assignedTo: '',
       startAt: undefined,
       endAt: undefined,
+      priority: PRIORITY_TASK.LOW,
     },
   });
 
@@ -221,6 +150,7 @@ export const TaskDetail = () => {
         assignedTo: task.assignedTo || '',
         startAt: task.startAt ? new Date(task.startAt).getTime() : undefined,
         endAt: task.endAt ? new Date(task.endAt).getTime() : undefined,
+        priority: task.priority || PRIORITY_TASK.LOW,
       });
     }
   }, [task, reset]);
@@ -260,10 +190,20 @@ export const TaskDetail = () => {
       });
     }
   };
+  const handleOpenInNewTab = () => {
+    window.open(window.location.href, '_blank');
+  }
 
   const handleMarkComplete = () => {
     handleStatusChange(STATUS_TASK.COMPLETED);
   };
+  const location = useLocation()
+
+  const handleCopyLink = async () => {
+    const url = `${window.location.origin}${location.pathname}${location.search}`
+    await navigator.clipboard.writeText(url)
+    toast.success("Đã copy liên kết")
+  }
 
   const statusConfig = getStatusConfig(task?.status);
   const StatusIcon = statusConfig.icon;
@@ -346,7 +286,7 @@ export const TaskDetail = () => {
               </span>
               <span className="text-muted-foreground">/</span>
               <span className="text-foreground font-semibold">
-                  {task.name}
+                {task.name}
               </span>
             </nav>
           </div>
@@ -358,19 +298,7 @@ export const TaskDetail = () => {
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  className="rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700"
-                >
-                  <Share2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Chia sẻ</TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
+                  onClick={() => handleCopyLink()}
                   className="rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700"
                 >
                   <Link2 className="h-4 w-4" />
@@ -385,6 +313,7 @@ export const TaskDetail = () => {
                   variant="ghost"
                   size="icon-sm"
                   className="rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700"
+                  onClick={() => handleOpenInNewTab()}
                 >
                   <ExternalLink className="h-4 w-4" />
                 </Button>
@@ -433,13 +362,14 @@ export const TaskDetail = () => {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex-1 space-y-3">
               {/* Task Type Badge */}
-              <div className="flex items-center gap-2">
-                <div className="flex h-6 w-6 items-center justify-center rounded bg-blue-500">
-                  <CheckCircle2 className="h-4 w-4 text-white" />
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="text-sm font-medium">
+                    Độ ưu tiên: <Badge className={`${PRIORITY_CONFIG_TASK[task?.priority as keyof typeof PRIORITY_CONFIG_TASK]?.bgLight} ${PRIORITY_CONFIG_TASK[task?.priority as keyof typeof PRIORITY_CONFIG_TASK]?.textColor} border-0 font-medium`}>
+                      {PRIORITY_CONFIG_TASK[task?.priority as keyof typeof PRIORITY_CONFIG_TASK]?.label}
+                    </Badge>
+                  </div>
                 </div>
-                <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                  Task
-                </span>
               </div>
 
               {/* Title with inline edit button */}
@@ -477,7 +407,7 @@ export const TaskDetail = () => {
                 </motion.button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                {Object.entries(STATUS_CONFIG).map(([key, config]) => {
+                {Object.entries(STATUS_CONFIG_TASK).map(([key, config]) => {
                   const Icon = config.icon;
                   return (
                     <DropdownMenuItem
@@ -548,13 +478,12 @@ export const TaskDetail = () => {
                         transition={{ duration: 0.2 }}
                       >
                         <div
-                          className={`prose prose-slate dark:prose-invert max-w-none ${
-                            !isDescriptionExpanded &&
+                          className={`prose prose-slate dark:prose-invert max-w-none ${!isDescriptionExpanded &&
                             task.description &&
                             task.description.length > 300
-                              ? 'line-clamp-4'
-                              : ''
-                          }`}
+                            ? 'line-clamp-4'
+                            : ''
+                            }`}
                         >
                           <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                             {task.description || (
@@ -600,7 +529,7 @@ export const TaskDetail = () => {
                       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-blue-500 to-cyan-500">
                         <Clock className="h-4 w-4 text-white" />
                       </div>
-                      <h2 className="text-lg font-semibold">Hoạt động</h2>
+                      <h2 className="text-lg font-semibold">Báo cáo</h2>
                     </div>
 
                     <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-4 dark:bg-slate-800/50">
@@ -703,13 +632,13 @@ export const TaskDetail = () => {
                         <span className="text-sm font-medium">
                           {task.startAt
                             ? new Date(task.startAt).toLocaleDateString(
-                                'vi-VN',
-                                {
-                                  day: '2-digit',
-                                  month: 'short',
-                                  year: 'numeric',
-                                }
-                              )
+                              'vi-VN',
+                              {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                              }
+                            )
                             : '-'}
                         </span>
                         <Button
@@ -736,10 +665,10 @@ export const TaskDetail = () => {
                         <span className="text-sm font-medium">
                           {task.endAt
                             ? new Date(task.endAt).toLocaleDateString('vi-VN', {
-                                day: '2-digit',
-                                month: 'short',
-                                year: 'numeric',
-                              })
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric',
+                            })
                             : '-'}
                         </span>
                         <Button
@@ -769,7 +698,7 @@ export const TaskDetail = () => {
                         <span>Project</span>
                       </div>
                       <span className="cursor-pointer text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 hover:underline dark:text-blue-400">
-                        {task.projectId}
+                        {task.name}
                       </span>
                     </motion.div>
                   </div>
@@ -811,33 +740,6 @@ export const TaskDetail = () => {
                       >
                         <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                         <span className="text-xs">Hoàn thành</span>
-                      </Button>
-                    </motion.div>
-
-                    <motion.div
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Button
-                        variant="outline"
-                        className="h-auto w-full flex-col gap-1 rounded-xl py-3 transition-all hover:border-violet-200 hover:bg-violet-50 dark:hover:border-violet-800 dark:hover:bg-violet-950/30"
-                      >
-                        <Link2 className="h-5 w-5 text-violet-600 dark:text-violet-400" />
-                        <span className="text-xs">Liên kết</span>
-                      </Button>
-                    </motion.div>
-
-                    <motion.div
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Button
-                        variant="outline"
-                        onClick={() => setIsDeleteModalOpen(true)}
-                        className="h-auto w-full flex-col gap-1 rounded-xl py-3 transition-all hover:border-red-200 hover:bg-red-50 dark:hover:border-red-800 dark:hover:bg-red-950/30"
-                      >
-                        <Trash2 className="h-5 w-5 text-red-600 dark:text-red-400" />
-                        <span className="text-xs">Xóa</span>
                       </Button>
                     </motion.div>
                   </div>
@@ -900,7 +802,7 @@ export const TaskDetail = () => {
                           <SelectValue placeholder="Chọn trạng thái" />
                         </SelectTrigger>
                         <SelectContent>
-                          {Object.entries(STATUS_CONFIG).map(
+                          {Object.entries(STATUS_CONFIG_TASK).map(
                             ([key, config]) => (
                               <SelectItem key={key} value={key}>
                                 <div className="flex items-center gap-2">
@@ -919,6 +821,42 @@ export const TaskDetail = () => {
                   {errors.status && (
                     <p className="text-destructive text-xs">
                       {errors.status.message}
+                    </p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label>Độ ưu tiên</Label>
+                  <Controller
+                    control={control}
+                    name="priority"
+                    render={({ field }) => (
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Chọn độ ưu tiên" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(PRIORITY_CONFIG_TASK).map(
+                            ([key, config]) => (
+                              <SelectItem key={key} value={key}>
+                                <div className="flex items-center gap-2">
+                                  <div
+                                    className={`h-2 w-2 rounded-full ${config?.color}`}
+                                  />
+                                  {config.label}
+                                </div>
+                              </SelectItem>
+                            )
+                          )}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.priority && (
+                    <p className="text-destructive text-xs">
+                      {errors.priority.message}
                     </p>
                   )}
                 </div>
@@ -1070,4 +1008,49 @@ export const TaskDetail = () => {
       </Dialog>
     </div>
   );
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+} as const;
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: 'spring' as const,
+      stiffness: 100,
+      damping: 15,
+    },
+  },
+};
+
+const sidebarItemVariants = {
+  hidden: { opacity: 0, x: 20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: 'spring' as const,
+      stiffness: 100,
+      damping: 15,
+    },
+  },
+};
+
+const cardHoverVariants = {
+  rest: { scale: 1 },
+  hover: {
+    scale: 1.01,
+    transition: { duration: 0.2 },
+  },
 };

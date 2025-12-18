@@ -1,5 +1,4 @@
 // src/utils/auth.utils.ts
-
 const ACCESS_TOKEN_KEY = 'access_token';
 const USER_KEY = 'auth_user';
 
@@ -54,5 +53,18 @@ export const auth = {
   login: (user: UserInfo) => {
     useAuthStore.getState().login(user);
   },
-  logout: () => useAuthStore.getState().logout(),
+  logout: () => {
+    useAuthStore.getState().logout()
+    clearAuth()
+  },
 };
+
+export function logout(navigate: any) {
+  useAuthStore.getState().logout()
+  clearAuth()
+  if (navigate) {
+    navigate('/login')
+  } else {
+    window.location.href = '/login'
+  }
+}
