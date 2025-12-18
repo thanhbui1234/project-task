@@ -1,4 +1,4 @@
-import { Home, Command, User, LogOut } from 'lucide-react';
+import { Home, Command, User, LogOut, Users } from 'lucide-react';
 import { GoTasklist } from 'react-icons/go';
 import { logout } from '@/utils/auth';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +21,7 @@ const items = [
   { title: 'Trang chủ', url: URL_PATH.DASHBOARD, icon: Home },
   { title: 'Dự án của tôi', url: URL_PATH.PROJECT, icon: GoTasklist },
   { title: 'Hồ sơ', url: URL_PATH.PROFILE, icon: User },
+  { title: 'Nhân viên', url: URL_PATH.EMPLOYEE, icon: Users },
 ];
 
 export function AppSidebar() {

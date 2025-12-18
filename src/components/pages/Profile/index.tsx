@@ -96,7 +96,7 @@ export const Profile = () => {
     // Upload file immediately
     toast.loading('Đang tải ảnh lên...', { id: 'upload-avatar' });
 
-    uploadFile(file, {
+    uploadFile([file], {
       onSuccess: (data) => {
         toast.dismiss('upload-avatar');
 

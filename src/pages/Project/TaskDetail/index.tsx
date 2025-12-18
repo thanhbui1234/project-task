@@ -68,6 +68,7 @@ import {
 } from '@/consts/task';
 import { STATUS_CONFIG_TASK } from '@/consts/task';
 import { toast } from 'sonner';
+import DropzoneComponent from '@/components/ui/Dropzone';
 
 // Status config with colors and icons
 
@@ -102,6 +103,7 @@ export const TaskDetail = () => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const { data: task, isLoading } = useGetDetailTask({
     taskId: taskId as string,
@@ -485,13 +487,12 @@ export const TaskDetail = () => {
                         transition={{ duration: 0.2 }}
                       >
                         <div
-                          className={`prose prose-slate dark:prose-invert max-w-none ${
-                            !isDescriptionExpanded &&
+                          className={`prose prose-slate dark:prose-invert max-w-none ${!isDescriptionExpanded &&
                             task.description &&
                             task.description.length > 300
-                              ? 'line-clamp-4'
-                              : ''
-                          }`}
+                            ? 'line-clamp-4'
+                            : ''
+                            }`}
                         >
                           <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                             {task.description || (
@@ -525,37 +526,64 @@ export const TaskDetail = () => {
             </motion.div>
 
             {/* Activity / Comments Section */}
-            <motion.div variants={itemVariants}>
-              <motion.div
-                variants={cardHoverVariants}
-                initial="rest"
-                whileHover="hover"
-              >
-                <Card className="overflow-hidden border-0 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50">
-                  <CardContent className="p-6">
-                    <div className="mb-4 flex items-center gap-2">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-blue-500 to-cyan-500">
-                        <Clock className="h-4 w-4 text-white" />
+            {task.status === STATUS_TASK.COMPLETED && (
+              <motion.div variants={itemVariants}>
+                <motion.div
+                  variants={cardHoverVariants}
+                  initial="rest"
+                  whileHover="hover"
+                >
+                  <Card className="overflow-hidden border-0 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50">
+                    <CardContent className="p-6">
+                      <div className="mb-4 flex items-center gap-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-blue-500 to-cyan-500">
+                          <Clock className="h-4 w-4 text-white" />
+                        </div>
+                        <h2 className="text-lg font-semibold">Báo cáo</h2>
                       </div>
-                      <h2 className="text-lg font-semibold">Báo cáo</h2>
-                    </div>
 
-                    <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-4 dark:bg-slate-800/50">
-                      <Avatar className="h-10 w-10">
-                        <AvatarFallback className="bg-linear-to-br from-violet-500 to-purple-600 text-sm font-medium text-white">
-                          {getInitials(getEmployeeName(task.assignedTo))}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <p className="text-muted-foreground text-sm">
-                          Thêm bình luận hoặc ghi chú...
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                      <DropzoneComponent
+                        projectId={task.projectId}
+                        taskId={task.id}
+                        onUploadSuccess={() => {
+                          // Optional: Invalidate queries if needed to show new files
+                        }}
+                      />
+
+                      {/* Attached Files Grid */}
+                      {task.files && task.files.length > 0 && (
+                        <div className="mt-6">
+                          <h3 className="mb-3 text-sm font-semibold text-slate-500 dark:text-slate-400">
+                            Ảnh đính kèm ({task.files.length})
+                          </h3>
+                          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                            {task.files.map((file) => (
+                              <motion.div
+                                key={file.id}
+                                layoutId={`file-${file.id}`}
+                                whileHover={{ scale: 1.05, y: -2 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setPreviewImage(file.path)}
+                                className="group relative aspect-square cursor-zoom-in overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-xs transition-colors dark:border-slate-800 dark:bg-slate-800"
+                              >
+                                <img
+                                  src={file.path}
+                                  alt="Attached file"
+                                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                  loading="lazy"
+                                />
+                                <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10 dark:group-hover:bg-white/5" />
+                              </motion.div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </motion.div>
-            </motion.div>
+            )}
           </motion.div>
 
           {/* RIGHT - Sidebar */}
@@ -640,13 +668,13 @@ export const TaskDetail = () => {
                         <span className="text-sm font-medium">
                           {task.startAt
                             ? new Date(task.startAt).toLocaleDateString(
-                                'vi-VN',
-                                {
-                                  day: '2-digit',
-                                  month: 'short',
-                                  year: 'numeric',
-                                }
-                              )
+                              'vi-VN',
+                              {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                              }
+                            )
                             : '-'}
                         </span>
                         <Button
@@ -673,10 +701,10 @@ export const TaskDetail = () => {
                         <span className="text-sm font-medium">
                           {task.endAt
                             ? new Date(task.endAt).toLocaleDateString('vi-VN', {
-                                day: '2-digit',
-                                month: 'short',
-                                year: 'numeric',
-                              })
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric',
+                            })
                             : '-'}
                         </span>
                         <Button
@@ -1012,6 +1040,19 @@ export const TaskDetail = () => {
               )}
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Image Preview Modal */}
+      <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
+        <DialogContent className="max-w-4xl border-0 bg-transparent p-0 shadow-none">
+          <div className="relative flex h-[80vh] w-full items-center justify-center overflow-hidden rounded-lg">
+            <img
+              src={previewImage || ''}
+              alt="Preview"
+              className="h-full w-full object-contain"
+            />
+          </div>
         </DialogContent>
       </Dialog>
     </div>
