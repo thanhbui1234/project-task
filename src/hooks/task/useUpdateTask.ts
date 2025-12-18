@@ -16,6 +16,7 @@ export const useUpdateTask = (projectId: string) => {
   >({
     mutationFn: (data: IUpdateTaskSchema) =>
       api.put(API_ENDPOINTS.UPDATE_TASK, {
+        projectId: projectId,
         taskId: data.taskId,
         name: data.name,
         description: data.description,

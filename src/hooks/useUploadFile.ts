@@ -13,18 +13,20 @@ interface UploadFileResponse {
 }
 
 export const useUploadFile = () => {
-  return useMutation<UploadFileResponse[], Error, File>({
-    mutationFn: async (file: File) => {
-      const normalizedFile = await normalizeImage(file)
+  return useMutation<UploadFileResponse[], Error, File[]>({
+    mutationFn: async (files: File[]) => {
+      const normalizedFiles = await Promise.all(files.map((file) => normalizeImage(file)));
 
-      const formData = new FormData()
-      formData.append('images', normalizedFile)
+      const formData = new FormData();
+      normalizedFiles.forEach((file) => {
+        formData.append('images', file);
+      });
 
-      return (await api.post(API_ENDPOINTS.UPLOAD_FILE, formData)) as UploadFileResponse[]
+      return (await api.post(API_ENDPOINTS.UPLOAD_FILE, formData)) as UploadFileResponse[];
     },
 
     onError: (error) => {
-      console.error('Upload failed:', error)
+      console.error('Upload failed:', error);
     },
-  })
-}
+  });
+};

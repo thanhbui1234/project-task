@@ -24,4 +24,5 @@ export const API_ENDPOINTS = {
   UPDATE_PROFILE: '/user/me',
   // Upload
   UPLOAD_FILE: '/file/upload-files',
+  UPLOAD_FILE_TASK: '/project/files',
 };

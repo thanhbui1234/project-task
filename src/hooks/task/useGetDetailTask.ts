@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { API_ENDPOINTS } from '@/common/apiEndpoints';
 import { taskDetailKeys } from '@/utils/queryKeyFactory';
-
+import type { IFile } from '@/types/file';
 interface GetDetailTaskParams {
   taskId: string;
 }
@@ -16,6 +16,7 @@ interface ITaskDetailResponse {
   startAt: string | null;
   endAt: string | null;
   priority: string;
+  files: IFile[];
 }
 
 export function useGetDetailTask({ taskId }: GetDetailTaskParams) {
