@@ -6,6 +6,7 @@ import { URL_PATH } from './url';
 import Project from '@/pages/Project';
 import { ProjectDetail } from '@/pages/Project/ProjectDetail';
 import { TaskDetail } from '@/pages/Project/TaskDetail';
+import { Profile } from '@/components/pages/Profile';
 type ExtendedRoute = RouteProps & {
   permissions?: string[]; // Permissions required for the route
 };
@@ -37,5 +38,9 @@ export const privateRoutes: ExtendedRoute[] = [
   {
     path: URL_PATH.TASK_DETAIL,
     element: <TaskDetail />,
+  },
+  {
+    path: URL_PATH.PROFILE,
+    element: <Profile />,
   },
 ];

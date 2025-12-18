@@ -17,7 +17,9 @@ import { TypewriterEffectSmooth } from '@/components/ui/typewriter-effect';
 import { EncryptedText } from '@/components/ui/encrypted-text';
 import { useGetMyProject } from '@/hooks/dashboard/useGetMyProject';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useGetMe } from '@/hooks/profile/useGetMe';
 export default function Dashboard() {
+  const { data: profile } = useGetMe();
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageMyProject, setCurrentPageMyProject] = useState(1);
   const navigate = useNavigate();
@@ -44,7 +46,14 @@ export default function Dashboard() {
     setCurrentPageMyProject(page);
   };
 
-  const words = [{ text: 'Welcome back!' }, { text: "Here's your overview." }];
+  const words = [
+    { text: 'Welcome' },
+    { text: 'back,' },
+    {
+      text: profile?.name ? `${profile.name}!` : 'User!',
+      className: 'text-blue-500 dark:text-blue-500',
+    },
+  ];
   return (
     <div className="min-h-screen w-full p-8">
       <div className="mx-auto max-w-7xl">

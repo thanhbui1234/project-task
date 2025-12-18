@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   SidebarInset,
   SidebarProvider,
@@ -7,11 +7,13 @@ import {
 import { getToken } from '@/utils/auth';
 import { URL_PATH } from '@/common/url';
 import { AppSidebar } from '@/components/ui/app-sidebar';
-import { useAuthStore } from '@/store/useAuthStore';
+import { useGetMe } from '@/hooks/profile/useGetMe';
+import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 export function PrivateLayout() {
   const hasToken = getToken();
   const location = useLocation();
-  const { user } = useAuthStore();
+  const navigate = useNavigate();
+  const { data: profile } = useGetMe();
   const PAGE_TITLES: Record<string, string> = {
     [URL_PATH.DASHBOARD]: 'Dashboard',
     [URL_PATH.PROJECT]: 'Dự án của tôi',
@@ -41,12 +43,10 @@ export function PrivateLayout() {
                 <h2 className="text-lg font-semibold">{currentTitle}</h2>
               </div>
               <div className="flex items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-xs font-bold text-white">
-                  {user?.name?.charAt(0).toUpperCase()}
-                </div>
-                <span className="truncate text-xs text-gray-600">
-                  {user?.name?.split('@')[0]}
-                </span>
+                <Avatar onClick={() => navigate(URL_PATH.PROFILE)} className="h-7 w-7 rounded-full cursor-pointer">
+                  <AvatarImage src={profile?.avatar.path} alt={profile?.name} />
+                  <AvatarFallback>{profile?.name?.charAt(0).toUpperCase()}</AvatarFallback>
+                </Avatar>
               </div>
             </header>
             <main className="flex-1 overflow-auto p-6">

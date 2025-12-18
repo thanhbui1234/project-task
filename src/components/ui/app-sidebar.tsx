@@ -20,7 +20,7 @@ import { URL_PATH } from '@/common/url';
 const items = [
   { title: 'Trang chủ', url: URL_PATH.DASHBOARD, icon: Home },
   { title: 'Dự án của tôi', url: URL_PATH.PROJECT, icon: GoTasklist },
-  { title: 'Nhân viên', url: URL_PATH.EMPLOYEE, icon: User },
+  { title: 'Hồ sơ', url: URL_PATH.PROFILE, icon: User },
 ];
 
 export function AppSidebar() {

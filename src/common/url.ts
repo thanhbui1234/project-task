@@ -9,6 +9,7 @@ const PRIVATE_PATH = {
   PROJECT_DETAIL: '/project/:id',
   TASK_DETAIL: '/task/:id',
   EMPLOYEE: '/employee',
+  PROFILE: '/profile',
 };
 
 const URL_PATH = {
