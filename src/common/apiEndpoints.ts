@@ -19,4 +19,9 @@ export const API_ENDPOINTS = {
   GET_DASHBOARD: '/project/dashboard',
   GET_DASHBOARD_PERCENTAGE: '/project/dashboard/percentage',
   GET_SLOW_PROJECT: '/project/task/',
+  // Profile
+  GET_ME: '/user/me',
+  UPDATE_PROFILE: '/user/me',
+  // Upload
+  UPLOAD_FILE: '/file/upload-files',
 };
