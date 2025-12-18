@@ -6,10 +6,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import type { ReactNode } from "react";
-import { Loader2 } from "lucide-react";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import type { ReactNode } from 'react';
+import { Loader2 } from 'lucide-react';
 
 interface CustomModalProps {
   open: boolean;
@@ -27,11 +27,11 @@ interface CustomModalProps {
 export function CustomModal({
   open,
   onOpenChange,
-  title = "Confirm Action",
+  title = 'Confirm Action',
   description,
   children,
-  confirmText = "Confirm",
-  cancelText = "Cancel",
+  confirmText = 'Confirm',
+  cancelText = 'Hủy',
   onConfirm,
   onCancel,
   isLoading = false,
@@ -60,7 +60,11 @@ export function CustomModal({
             </Button>
           </DialogClose>
           <Button onClick={handleConfirm} disabled={isLoading}>
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : confirmText}
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              confirmText
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,8 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import api from "@/lib/axios";
-import { API_ENDPOINTS } from "@/common/apiEndpoints";
-import { projectKeys } from "@/utils/queryKeyFactory";
-import { DEFAULT_PAGE, TAKE_PAGE } from "@/consts/query";
+import api from '@/lib/axios';
+import { API_ENDPOINTS } from '@/common/apiEndpoints';
+import { projectKeys } from '@/utils/queryKeyFactory';
+import { DEFAULT_PAGE, TAKE_PAGE } from '@/consts/query';
 import type { IProjectResponse } from '@/types/project';
 
 const defaultQuery = {

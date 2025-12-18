@@ -1,4 +1,4 @@
-import type { Meta } from "@/types/meta";
+import type { Meta } from '@/types/meta';
 export interface IProject {
   id: string;
   name: string;
@@ -6,6 +6,9 @@ export interface IProject {
   status: string;
   owner: string;
   taskCount: number;
+  createdAt: number;
+  startAt: number;
+  endAt: number;
 }
 
 export interface IProjectResponse {

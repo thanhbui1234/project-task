@@ -1,6 +1,6 @@
-import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -8,63 +8,68 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
-import type { ColumnDef } from "@tanstack/react-table"
-import type { ITask } from "@/types/task"
-import type { IEmployee } from "@/types/employee"
-import { STATUS_TASK } from "@/consts/statusProject"
-import { Badge } from "@/components/ui/badge"
+} from '@/components/ui/dropdown-menu';
+import type { ColumnDef } from '@tanstack/react-table';
+import type { ITask } from '@/types/task';
+import type { IEmployee } from '@/types/employee';
+import { PRIORITY_TASK, STATUS_TASK } from '@/consts/task';
+import { Badge } from '@/components/ui/badge';
 
 const getStatusLabel = (status: string) => {
   switch (status) {
     case STATUS_TASK.STARTED:
-      return "Bắt đầu"
+      return 'Bắt đầu';
     case STATUS_TASK.ACCEPTED:
-      return "Đã nhận việc"
+      return 'Đã nhận việc';
     case STATUS_TASK.IN_PROGRESS:
-      return "Đang thực hiện"
+      return 'Đang thực hiện';
     case STATUS_TASK.COMPLETED:
-      return "Hoàn thành"
+      return 'Hoàn thành';
     default:
-      return status
+      return status;
   }
-}
+};
 
-const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
+const getStatusVariant = (
+  status: string
+): 'default' | 'secondary' | 'destructive' | 'outline' => {
   switch (status) {
     case STATUS_TASK.STARTED:
-      return "outline"
+      return 'outline';
     case STATUS_TASK.ACCEPTED:
-      return "secondary"
+      return 'secondary';
     case STATUS_TASK.IN_PROGRESS:
-      return "default"
+      return 'default';
     case STATUS_TASK.COMPLETED:
-      return "secondary"
+      return 'secondary';
     default:
-      return "outline"
+      return 'outline';
   }
-}
+};
 
 // Type cho table meta
 export interface TaskTableMeta {
-  employees: IEmployee[]
+  employees: IEmployee[];
 }
 
 // Hàm helper để lấy tên employee từ ID
-const getEmployeeName = (employeeId: string | null, employees: IEmployee[]): string => {
-  if (!employeeId) return "Chưa giao"
-  const employee = employees.find((emp) => emp.id === employeeId)
-  return employee?.name ?? employee?.email ?? "Không xác định"
-}
+const getEmployeeName = (
+  employeeId: string | null,
+  employees: IEmployee[]
+): string => {
+  if (!employeeId) return 'Chưa giao';
+  const employee = employees.find((emp) => emp.id === employeeId);
+  return employee?.name ?? employee?.email ?? 'Không xác định';
+};
 
 export const taskColumns: ColumnDef<ITask>[] = [
   {
-    id: "select",
+    id: 'select',
     header: ({ table }) => (
       <Checkbox
         checked={
           table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Chọn tất cả"
@@ -81,72 +86,98 @@ export const taskColumns: ColumnDef<ITask>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: 'name',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Tên công việc
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
-    cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
+    cell: ({ row }) => (
+      <div className="font-medium">{row.getValue('name')}</div>
+    ),
   },
   {
-    accessorKey: "description",
-    header: "Mô tả",
+    accessorKey: 'description',
+    header: 'Mô tả',
     cell: ({ row }) => (
-      <div className="max-w-[200px] truncate" title={row.getValue("description")}>
-        {row.getValue("description") || "-"}
+      <div
+        className="max-w-[200px] truncate"
+        title={row.getValue('description')}
+      >
+        {row.getValue('description') || '-'}
       </div>
     ),
   },
   {
-    accessorKey: "status",
-    header: "Trạng thái",
+    accessorKey: 'status',
+    header: 'Trạng thái',
     cell: ({ row }) => {
-      const status = row.getValue("status") as string
+      const status = row.getValue('status') as string;
       return (
         <Badge variant={getStatusVariant(status)}>
           {getStatusLabel(status)}
         </Badge>
-      )
+      );
     },
   },
   {
-    accessorKey: "assignedTo",
-    header: "Người được giao",
+    accessorKey: 'assignedTo',
+    header: 'Người được giao',
     cell: ({ row, table }) => {
-      const assignedTo = row.getValue("assignedTo") as string | null
-      const employees = (table.options.meta as TaskTableMeta)?.employees ?? []
-      return <div>{getEmployeeName(assignedTo, employees)}</div>
+      const assignedTo = row.getValue('assignedTo') as string | null;
+      const employees = (table.options.meta as TaskTableMeta)?.employees ?? [];
+      return <div>{getEmployeeName(assignedTo, employees)}</div>;
     },
   },
   {
-    accessorKey: "startAt",
-    header: "Ngày bắt đầu",
+    accessorKey: 'priority',
+    header: 'Độ ưu tiên',
     cell: ({ row }) => {
-      const date = row.getValue("startAt") as string | null
-      return <div>{date ? new Date(date).toLocaleDateString("vi-VN") : "-"}</div>
+      const priority = row.getValue('priority') as string;
+      switch (priority) {
+        case PRIORITY_TASK.LOW:
+          return 'Thấp';
+        case PRIORITY_TASK.MEDIUM:
+          return 'Trung bình';
+        case PRIORITY_TASK.HIGH:
+          return 'Cao';
+        case PRIORITY_TASK.VERY_HIGH:
+          return 'Rất cao';
+        default:
+          return priority;
+      }
     },
   },
   {
-    accessorKey: "endAt",
-    header: "Ngày kết thúc",
+    accessorKey: 'startAt',
+    header: 'Ngày bắt đầu',
     cell: ({ row }) => {
-      const date = row.getValue("endAt") as string | null
-      return <div>{date ? new Date(date).toLocaleDateString("vi-VN") : "-"}</div>
+      const date = row.getValue('startAt') as string | null;
+      return (
+        <div>{date ? new Date(date).toLocaleDateString('vi-VN') : '-'}</div>
+      );
     },
   },
   {
-    id: "actions",
+    accessorKey: 'endAt',
+    header: 'Ngày kết thúc',
+    cell: ({ row }) => {
+      const date = row.getValue('endAt') as string | null;
+      return (
+        <div>{date ? new Date(date).toLocaleDateString('vi-VN') : '-'}</div>
+      );
+    },
+  },
+  {
+    id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const task = row.original
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -157,17 +188,16 @@ export const taskColumns: ColumnDef<ITask>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Hành động</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(task.id)}
-            >
-              Sao chép ID
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
-            <DropdownMenuItem className="text-red-600">Xóa</DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-red-600"
+              onClick={() => console.log('hello', row.original.id)}
+            >
+              Xóa
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];

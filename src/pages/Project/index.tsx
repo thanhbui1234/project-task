@@ -1,25 +1,29 @@
-import { Button } from "@/components/ui/button";
-import { CustomModal } from "@/components/ui/DialogCustom";
-import { Plus, Search } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
-import { Input } from "@/components/ui/input";
-import { useForm, FormProvider } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createProjectSchema, type ICreateProjectSchema } from "@/schemas/Project";
-import { ProjectFormContent } from "@/components/pages/Project/FormCreatProject";
-import { useCreatProject } from "@/hooks/project/useCreatProject";
-import { useGetProjects } from "@/hooks/project/useGetProject";
-import { useDeleteProject } from "@/hooks/project/useDeleteProject";
-import { useUpdateProject } from "@/hooks/project/useUpdateProject";
-import { ProjectGrid } from "@/components/pages/Project/CardProject";
-import type { registerType } from "@/schemas/auth";
-import type { IProject } from "@/types/project";
+import { Button } from '@/components/ui/button';
+import { CustomModal } from '@/components/ui/DialogCustom';
+import { Plus, Search } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Input } from '@/components/ui/input';
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  createProjectSchema,
+  type ICreateProjectSchema,
+} from '@/schemas/Project';
+import { ProjectFormContent } from '@/components/pages/Project/FormCreatProject';
+import { useCreatProject } from '@/hooks/project/useCreatProject';
+import { useGetProjects } from '@/hooks/project/useGetProject';
+import { useDeleteProject } from '@/hooks/project/useDeleteProject';
+import { useUpdateProject } from '@/hooks/project/useUpdateProject';
+import { ProjectGrid } from '@/components/pages/Project/CardProject';
+import type { registerType } from '@/schemas/auth';
+import type { IProject } from '@/types/project';
+import { STATUS_PROJECT } from '@/consts/statusProject';
 
 export default function Projects() {
   const [openModal, setOpenModal] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedTerm, setDebouncedTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedTerm, setDebouncedTerm] = useState('');
   const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
   const [mode, setMode] = useState<'create' | 'edit'>('create');
   const { createProject, isPending } = useCreatProject();
@@ -43,7 +47,7 @@ export default function Projects() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isPending: isProjectPending
+    isPending: isProjectPending,
   } = useGetProjects({ name: debouncedTerm });
 
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -77,9 +81,11 @@ export default function Projects() {
   const form = useForm({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
-      name: "",
-      client: "",
-      status: ""
+      name: '',
+      client: '',
+      status: STATUS_PROJECT.PENDING,
+      startAt: '',
+      endAt: '',
     },
   });
 
@@ -98,9 +104,9 @@ export default function Projects() {
     setSelectedProject(null);
     setMode('create');
     form.reset({
-      name: "",
-      client: "",
-      status: "",
+      name: '',
+      client: '',
+      status: '',
     });
     setOpenModal(true);
   };
@@ -116,11 +122,11 @@ export default function Projects() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 relative">
-      <div className="fixed bottom-8 right-8 z-10">
+    <div className="relative min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="fixed right-8 bottom-8 z-10">
         <Button
           size="lg"
-          className="rounded-full shadow-2xl hover:scale-110 transition-transform"
+          className="rounded-full shadow-2xl transition-transform hover:scale-110"
           onClick={handleAdd}
         >
           <Plus className="mr-2 h-6 w-6" /> Thêm dự án
@@ -130,9 +136,9 @@ export default function Projects() {
       <div className="container mx-auto px-4 py-8">
         <div className="sticky top-0 z-20 mb-6 flex justify-end py-4 backdrop-blur-sm">
           <div className="relative w-full max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
             <Input
-              className="pl-9 bg-white/50 border-gray-200 focus:bg-white transition-all shadow-sm rounded-full"
+              className="rounded-full border-gray-200 bg-white/50 pl-9 shadow-sm transition-all focus:bg-white"
               placeholder="Tìm kiếm dự án..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -149,7 +155,7 @@ export default function Projects() {
         />
 
         {/* Infinite scroll trigger */}
-        <div ref={loadMoreRef} className="h-4 w-full flex justify-center p-4">
+        <div ref={loadMoreRef} className="flex h-4 w-full justify-center p-4">
           {isFetchingNextPage && 'loadding.....'}
         </div>
       </div>
@@ -158,9 +164,13 @@ export default function Projects() {
         <CustomModal
           open={openModal}
           onOpenChange={setOpenModal}
-          title={mode === 'create' ? "Thêm dự án mới" : "Cập nhật dự án"}
-          description={mode === 'create' ? "Nhập thông tin dự án." : "Cập nhật thông tin dự án."}
-          confirmText={mode === 'create' ? "Tạo dự án" : "Lưu thay đổi"}
+          title={mode === 'create' ? 'Thêm dự án mới' : 'Cập nhật dự án'}
+          description={
+            mode === 'create'
+              ? 'Nhập thông tin dự án.'
+              : 'Cập nhật thông tin dự án.'
+          }
+          confirmText={mode === 'create' ? 'Tạo dự án' : 'Lưu thay đổi'}
           onConfirm={form.handleSubmit(onSubmit)}
           isLoading={mode === 'create' ? isPending : isUpdatePending}
         >
@@ -178,7 +188,6 @@ export default function Projects() {
       >
         <p>Khi xoá dự án sẽ không thể khôi phục lại</p>
       </CustomModal>
-
     </div>
   );
 }

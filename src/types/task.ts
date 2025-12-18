@@ -1,4 +1,4 @@
-import type { Meta } from "@/types/meta";
+import type { Meta } from '@/types/meta';
 
 export interface ITask {
   id: string;
@@ -15,4 +15,3 @@ export interface ITaskResponse {
   docs: ITask[];
   meta: Meta;
 }
-

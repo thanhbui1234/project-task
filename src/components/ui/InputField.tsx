@@ -5,21 +5,22 @@ import {
   type FieldValues,
   type Path,
   type UseFormRegister,
-} from "react-hook-form"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { motion } from "framer-motion"
-import { Textarea } from "./textarea"
+} from 'react-hook-form';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { motion } from 'framer-motion';
+import { Textarea } from './textarea';
 
 interface InputFieldProps<T extends FieldValues> {
-  control?: Control<T>
-  register?: UseFormRegister<T>
-  name: Path<T>
-  label: string
-  type?: string
-  placeholder?: string
-  errors?: FieldErrors<T>
-  textarea?: boolean
+  control?: Control<T>;
+  register?: UseFormRegister<T>;
+  name: Path<T>;
+  label: string;
+  type?: string;
+  placeholder?: string;
+  errors?: FieldErrors<T>;
+  textarea?: boolean;
+  className?: string;
 }
 
 export function InputField<T extends FieldValues>({
@@ -27,12 +28,13 @@ export function InputField<T extends FieldValues>({
   register,
   name,
   label,
-  type = "text",
+  type = 'text',
   placeholder,
   errors,
   textarea = false,
+  className,
 }: InputFieldProps<T>) {
-  const errorMessage = errors?.[name]?.message as string | undefined
+  const errorMessage = errors?.[name]?.message as string | undefined;
 
   /* ----------- Controller Mode ----------- */
   if (control) {
@@ -44,23 +46,30 @@ export function InputField<T extends FieldValues>({
           name={name}
           control={control}
           render={({ field }) => (
-            <motion.div whileFocus={{ scale: 1.01 }}>
-              <Input
-                {...field}
-                id={name}
-                type={type}
-                placeholder={placeholder}
-                aria-invalid={!!errorMessage}
-              />
+            <motion.div whileFocus={{ scale: 1.01 }} className={className}>
+              {!textarea ? (
+                <Input
+                  {...field}
+                  id={name}
+                  type={type}
+                  placeholder={placeholder}
+                  aria-invalid={!!errorMessage}
+                />
+              ) : (
+                <Textarea
+                  {...field}
+                  id={name}
+                  placeholder={placeholder}
+                  aria-invalid={!!errorMessage}
+                />
+              )}
             </motion.div>
           )}
         />
 
-        {errorMessage && (
-          <p className="text-xs text-red-500">{errorMessage}</p>
-        )}
+        {errorMessage && <p className="text-xs text-red-500">{errorMessage}</p>}
       </div>
-    )
+    );
   }
 
   /* ----------- Register Mode ----------- */
@@ -72,14 +81,14 @@ export function InputField<T extends FieldValues>({
         <motion.div whileFocus={{ scale: 1.01 }}>
           {!textarea && (
             <Input
-            id={name}
-            type={type}
-            placeholder={placeholder}
-            aria-invalid={!!errorMessage}
-            {...register(name)}
-          />
+              id={name}
+              type={type}
+              placeholder={placeholder}
+              aria-invalid={!!errorMessage}
+              {...register(name)}
+            />
           )}
-          {textarea && ( 
+          {textarea && (
             <Textarea
               id={name}
               placeholder={placeholder}
@@ -89,17 +98,15 @@ export function InputField<T extends FieldValues>({
           )}
         </motion.div>
 
-        {errorMessage && (
-          <p className="text-xs text-red-500">{errorMessage}</p>
-        )}
+        {errorMessage && <p className="text-xs text-red-500">{errorMessage}</p>}
       </div>
-    )
+    );
   }
 
   /* ----------- Fallback ----------- */
   return (
-    <div className="text-red-500 text-sm">
+    <div className="text-sm text-red-500">
       ⚠ InputField: cần truyền control hoặc register
     </div>
-  )
+  );
 }
