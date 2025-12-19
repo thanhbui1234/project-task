@@ -111,6 +111,7 @@ export const taskColumns: ColumnDef<ITask>[] = [
     header: 'Độ ưu tiên',
     cell: ({ row }) => {
       const priority = row.getValue('priority') as string;
+      console.log(priority);
       switch (priority) {
         case PRIORITY_TASK.LOW:
           return 'Thấp';
