@@ -171,8 +171,7 @@ export const TaskDetail = () => {
     (Object.keys(dirtyFields) as Array<keyof IUpdateTaskSchema>).forEach(
       (key) => {
         if (key !== 'taskId') {
-          // @ts-ignore
-          payload[key] = data[key];
+          payload[key] = data[key] as unknown as undefined;
         }
       }
     );

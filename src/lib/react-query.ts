@@ -11,7 +11,6 @@ export const queryClient = new QueryClient({
   }),
   mutationCache: new MutationCache({
     onError: (error, _variables, _context, mutation) => {
-      console.log(error, 'error111');
       // Only handle error if the mutation hasn't handled it itself (optional check)
       // For now, enforcing global error handling:
       if (mutation.options.onError) return;

@@ -69,7 +69,6 @@ export function DataTableDemo<TData>({
   onRowClick,
   showFilter = true,
 }: DataTableProps<TData>) {
-  console.log('meta 1', meta);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -107,7 +106,6 @@ export function DataTableDemo<TData>({
   };
 
   const handleNextPage = () => {
-    console.log('meta', meta);
     if (meta && meta.hasNextPage && onPageChange) {
       onPageChange(meta.page + 1);
     }

@@ -111,7 +111,6 @@ export const ProjectDetail = () => {
   };
 
   const onSubmit = (data: ICreateTaskSchema) => {
-    console.log(data);
     createTask(data as unknown as ICreateTaskSchema);
     setOpenModal(false);
     form.reset();

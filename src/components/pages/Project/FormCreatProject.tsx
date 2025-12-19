@@ -12,11 +12,29 @@ import { useFormContext, Controller } from 'react-hook-form';
 import { STATUS_PROJECT } from '@/consts/statusProject';
 import { InputDatepicker } from '@/components/ui/InputDatepicker';
 
+import { useEffect } from 'react';
+
 export const ProjectFormContent = () => {
   const {
     control,
-    formState: { errors },
+    setValue,
+    formState: { errors, defaultValues },
+    watch,
   } = useFormContext();
+
+  const status = watch('status');
+  const isCompleted = status === STATUS_PROJECT.COMPLETED;
+
+  useEffect(() => {
+    if (isCompleted) {
+      // Create a specific type for the project form values to safely access startAt/endAt
+      // allowing for flexible typing since defaultValues comes as DeepPartial<T>
+      const defaults = defaultValues as { startAt?: number; endAt?: number } | undefined;
+
+      setValue('startAt', defaults?.startAt);
+      setValue('endAt', defaults?.endAt);
+    }
+  }, [isCompleted, setValue, defaultValues]);
 
   return (
     <div className="grid gap-5 py-4">
@@ -73,6 +91,7 @@ export const ProjectFormContent = () => {
               name="startAt"
               render={({ field }) => (
                 <InputDatepicker
+                  disabled={isCompleted}
                   value={field.value}
                   onChange={field.onChange}
                 />
@@ -92,6 +111,7 @@ export const ProjectFormContent = () => {
               name="endAt"
               render={({ field }) => (
                 <InputDatepicker
+                  disabled={isCompleted}
                   value={field.value}
                   onChange={field.onChange}
                 />
