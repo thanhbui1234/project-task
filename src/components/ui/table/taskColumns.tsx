@@ -3,41 +3,9 @@ import { Button } from '@/components/ui/button';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { ITask } from '@/types/task';
 import type { IEmployee } from '@/types/employee';
-import { PRIORITY_TASK, STATUS_TASK } from '@/consts/task';
+import { PRIORITY_TASK, STATUS_TASK, STATUS_CONFIG_TASK } from '@/consts/task';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpDown } from 'lucide-react';
-
-const getStatusLabel = (status: string) => {
-  switch (status) {
-    case STATUS_TASK.STARTED:
-      return 'Bắt đầu';
-    case STATUS_TASK.ACCEPTED:
-      return 'Đã nhận việc';
-    case STATUS_TASK.IN_PROGRESS:
-      return 'Đang thực hiện';
-    case STATUS_TASK.COMPLETED:
-      return 'Hoàn thành';
-    default:
-      return status;
-  }
-};
-
-const getStatusVariant = (
-  status: string
-): 'default' | 'secondary' | 'destructive' | 'outline' => {
-  switch (status) {
-    case STATUS_TASK.STARTED:
-      return 'outline';
-    case STATUS_TASK.ACCEPTED:
-      return 'secondary';
-    case STATUS_TASK.IN_PROGRESS:
-      return 'default';
-    case STATUS_TASK.COMPLETED:
-      return 'secondary';
-    default:
-      return 'outline';
-  }
-};
 
 // Type cho table meta
 export interface TaskTableMeta {
@@ -111,9 +79,20 @@ export const taskColumns: ColumnDef<ITask>[] = [
     header: 'Trạng thái',
     cell: ({ row }) => {
       const status = row.getValue('status') as string;
+      const config = STATUS_CONFIG_TASK[status];
+
+      if (!config) {
+        return <Badge variant="secondary">{status}</Badge>;
+      }
+
+      const Icon = config.icon;
+
       return (
-        <Badge variant={getStatusVariant(status)}>
-          {getStatusLabel(status)}
+        <Badge
+          className={`${config.bgLight} ${config.textColor} hover:${config.bgLight} border-0`}
+        >
+          {Icon && <Icon className="mr-1 h-3 w-3" />}
+          {config.label}
         </Badge>
       );
     },
