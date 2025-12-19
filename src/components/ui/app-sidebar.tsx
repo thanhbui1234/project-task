@@ -1,4 +1,4 @@
-import { Home, Command, User, LogOut, Users } from 'lucide-react';
+import { Home, User, LogOut, Users } from 'lucide-react';
 import { GoTasklist } from 'react-icons/go';
 import { logout } from '@/utils/auth';
 import { useNavigate } from 'react-router-dom';
@@ -36,16 +36,14 @@ export function AppSidebar() {
             <SidebarMenuButton
               size="lg"
               asChild
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="h-auto data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Link to={URL_PATH.DASHBOARD}>
-                <div className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Command className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">CH1MPAO</span>
-                  <span className="truncate text-xs">Project Manager</span>
-                </div>
+              <Link to={URL_PATH.DASHBOARD} className="flex w-full justify-center">
+                <img
+                  className="h-28 w-28 object-contain transition-transform hover:scale-105"
+                  src="/logo.png"
+                  alt="logo"
+                />
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
