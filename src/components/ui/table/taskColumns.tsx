@@ -1,51 +1,11 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { ITask } from '@/types/task';
 import type { IEmployee } from '@/types/employee';
-import { PRIORITY_TASK, STATUS_TASK } from '@/consts/task';
+import { PRIORITY_TASK, STATUS_CONFIG_TASK } from '@/consts/task';
 import { Badge } from '@/components/ui/badge';
-
-const getStatusLabel = (status: string) => {
-  switch (status) {
-    case STATUS_TASK.STARTED:
-      return 'Bắt đầu';
-    case STATUS_TASK.ACCEPTED:
-      return 'Đã nhận việc';
-    case STATUS_TASK.IN_PROGRESS:
-      return 'Đang thực hiện';
-    case STATUS_TASK.COMPLETED:
-      return 'Hoàn thành';
-    default:
-      return status;
-  }
-};
-
-const getStatusVariant = (
-  status: string
-): 'default' | 'secondary' | 'destructive' | 'outline' => {
-  switch (status) {
-    case STATUS_TASK.STARTED:
-      return 'outline';
-    case STATUS_TASK.ACCEPTED:
-      return 'secondary';
-    case STATUS_TASK.IN_PROGRESS:
-      return 'default';
-    case STATUS_TASK.COMPLETED:
-      return 'secondary';
-    default:
-      return 'outline';
-  }
-};
+import { ArrowUpDown } from 'lucide-react';
 
 // Type cho table meta
 export interface TaskTableMeta {
@@ -119,9 +79,20 @@ export const taskColumns: ColumnDef<ITask>[] = [
     header: 'Trạng thái',
     cell: ({ row }) => {
       const status = row.getValue('status') as string;
+      const config = STATUS_CONFIG_TASK[status];
+
+      if (!config) {
+        return <Badge variant="secondary">{status}</Badge>;
+      }
+
+      const Icon = config.icon;
+
       return (
-        <Badge variant={getStatusVariant(status)}>
-          {getStatusLabel(status)}
+        <Badge
+          className={`${config.bgLight} ${config.textColor} hover:${config.bgLight} border-0`}
+        >
+          {Icon && <Icon className="mr-1 h-3 w-3" />}
+          {config.label}
         </Badge>
       );
     },
@@ -173,31 +144,5 @@ export const taskColumns: ColumnDef<ITask>[] = [
         <div>{date ? new Date(date).toLocaleDateString('vi-VN') : '-'}</div>
       );
     },
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Mở menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Hành động</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-red-600"
-              onClick={() => console.log('hello', row.original.id)}
-            >
-              Xóa
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
+  }
 ];
