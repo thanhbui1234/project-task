@@ -29,6 +29,19 @@ const statusConfig: Record<
   COMPLETED: { label: 'Hoàn thành', variant: 'outline' },
 };
 
+const images = [
+  '/banner1.jpg',
+  '/banner2.jpg',
+  '/banner3.jpg',
+  '/banner4.jpg',
+  '/banner5.jpg',
+  '/banner6.jpg',
+  '/banner7.jpg',
+  '/banner8.jpg',
+  '/banner9.jpg',
+  '/banner10.jpg',
+];
+
 export const ProjectGrid = ({
   projects,
   isFetching,
@@ -64,6 +77,15 @@ export const ProjectGrid = ({
     return new Date(timestamp).toLocaleDateString('vi-VN');
   };
 
+  const getImage = (id: string | number) => {
+    const strId = id.toString();
+    let hash = 0;
+    for (let i = 0; i < strId.length; i++) {
+      hash = strId.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return images[Math.abs(hash) % images.length];
+  };
+
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {projects.map((project) => {
@@ -75,7 +97,7 @@ export const ProjectGrid = ({
         return (
           <Card
             key={project.id}
-            className="group relative h-full rounded-2xl border border-gray-200/80 bg-white transition-all hover:-translate-y-1 hover:shadow-lg"
+            className="group relative h-full rounded-2xl border border-gray-200/80 bg-white transition-all hover:-translate-y-1 hover:shadow-lg pt-0"
           >
             {/* STATUS BADGE – GÓC TRÁI */}
             <Badge
@@ -119,9 +141,16 @@ export const ProjectGrid = ({
             )}
 
             <Link to={`/project/${project.id}`}>
-              <CardHeader className="pb-3">
-                <div className="mb-4 h-40 rounded-xl border-2 border-dashed bg-gray-100" />
+              <div className="relative h-40 w-full overflow-hidden rounded-t-2xl">
+                <img
+                  src={getImage(project.id)}
+                  alt={project.name}
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+              </div>
 
+              <CardHeader className="pb-3 pt-4">
                 <CardTitle className="line-clamp-1 text-lg">
                   {project.name || 'Chưa đặt tên'}
                 </CardTitle>
