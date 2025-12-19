@@ -31,6 +31,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TAKE_PAGE } from '@/consts/query';
 import { useGetProjectDetail } from '@/hooks/project/useGetProjectDetail';
+import ListMolbie from '@/components/ui/ListMolbie';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const statusConfig: Record<
   string,
@@ -69,6 +71,7 @@ const formatDate = (timestamp: number | null | undefined) => {
 
 export const ProjectDetail = () => {
   const { id: projectId } = useParams();
+  const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -80,7 +83,6 @@ export const ProjectDetail = () => {
     page: currentPage,
     take: TAKE_PAGE,
   });
-
   const form = useForm({
     resolver: zodResolver(createTaskSchema),
     defaultValues: {
@@ -226,22 +228,23 @@ export const ProjectDetail = () => {
             </div>
           </div>
         </div>
-
-        {/* Task Table */}
-        <DataTableDemo
-          columns={taskColumns}
-          data={tasksData?.docs ?? []}
-          onAdd={handleAdd}
-          addButtonText="Thêm công việc"
-          searchPlaceholder="Tìm kiếm công việc..."
-          searchColumn="name"
-          meta={tasksData?.meta}
-          onPageChange={handlePageChange}
-          isLoading={isLoadingTasks}
-          tableMeta={tableMeta}
-          onRowClick={(task: ITask) => navigate(`/task/${task.id}`)}
-        />
+        {!isMobile && (
+          <DataTableDemo
+            columns={taskColumns}
+            data={tasksData?.docs ?? []}
+            onAdd={handleAdd}
+            addButtonText="Thêm công việc"
+            searchPlaceholder="Tìm kiếm công việc..."
+            searchColumn="name"
+            meta={tasksData?.meta}
+            onPageChange={handlePageChange}
+            isLoading={isLoadingTasks}
+            tableMeta={tableMeta}
+            onRowClick={(task: ITask) => navigate(`/task/${task.id}`)}
+          />
+        )}
       </div>
+      {isMobile && <ListMolbie data={tasksData?.docs ?? []} />}
 
       <FormProvider {...form}>
         <CustomModal

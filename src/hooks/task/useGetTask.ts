@@ -44,5 +44,6 @@ export function useGetTasks({
       };
     },
     enabled: !!projectId,
+    refetchOnMount: true,
   });
 }

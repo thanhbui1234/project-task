@@ -90,7 +90,7 @@ export function ChartPieLabel({
         </CardTitle>
         <CardDescription>Thống kê trạng thái công việc</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-row items-center gap-6 pb-0">
+      <CardContent className="flex flex-col  items-center gap-6 pb-0">
         <ChartContainer
           config={chartConfig}
           className="h-[300px] w-[300px] shrink-0"
@@ -108,7 +108,7 @@ export function ChartPieLabel({
             />
           </PieChart>
         </ChartContainer>
-        <div className="ml-4 flex flex-col justify-center gap-3">
+        <div className="ml-4 flex flex-col md:flex-row justify-center gap-3">
           {legendItems.map((item) => (
             <div
               key={item.label}
@@ -124,7 +124,7 @@ export function ChartPieLabel({
                   {item.label}
                 </span>
                 <span className="text-sm font-semibold tabular-nums">
-                  {item.value ?? 0}
+                  {`%${item.value || 0} `}
                 </span>
               </div>
             </div>
