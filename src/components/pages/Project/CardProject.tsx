@@ -22,11 +22,20 @@ import { Link } from 'react-router-dom';
 
 const statusConfig: Record<
   string,
-  { label: string; variant: 'default' | 'secondary' | 'outline' }
+  { label: string; className: string }
 > = {
-  PENDING: { label: 'Đang chờ', variant: 'secondary' },
-  IN_PROGRESS: { label: 'Đang thực hiện', variant: 'default' },
-  COMPLETED: { label: 'Hoàn thành', variant: 'outline' },
+  PENDING: {
+    label: 'Đang chờ',
+    className: 'bg-amber-100 text-amber-700 hover:bg-amber-200/80'
+  },
+  IN_PROGRESS: {
+    label: 'Đang thực hiện',
+    className: 'bg-blue-100 text-blue-700 hover:bg-blue-200/80'
+  },
+  COMPLETED: {
+    label: 'Hoàn thành',
+    className: 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200/80'
+  },
 };
 
 const images = [
@@ -91,7 +100,7 @@ export const ProjectGrid = ({
       {projects.map((project) => {
         const status = statusConfig[project.status] ?? {
           label: 'Không xác định',
-          variant: 'secondary',
+          className: 'bg-gray-100 text-gray-700',
         };
 
         return (
@@ -101,8 +110,7 @@ export const ProjectGrid = ({
           >
             {/* STATUS BADGE – GÓC TRÁI */}
             <Badge
-              variant={status.variant}
-              className="absolute top-3 left-3 z-10 text-xs"
+              className={`absolute top-3 left-3 z-10 text-xs font-medium backdrop-blur-sm ${status.className}`}
             >
               {status.label}
             </Badge>
