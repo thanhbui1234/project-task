@@ -39,7 +39,7 @@ export function AppSidebar() {
             >
               <Link to={URL_PATH.DASHBOARD} className="flex w-full justify-center">
                 <img
-                  className="h-40 w-40 object-contain transition-transform hover:scale-105"
+                  className="h-[80px] w-[250px] transition-transform hover:scale-105"
                   src="/logo.png"
                   alt="logo"
                 />
