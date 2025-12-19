@@ -12,6 +12,8 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/modifiers": "^9.0.0",
     "@hookform/resolvers": "^5.2.2",
     "@lexical/react": "^0.39.0",
     "@lexical/rich-text": "^0.39.0",
@@ -42,6 +44,7 @@
     "motion": "^12.23.26",
     "react": "^19.2.0",
     "react-day-picker": "^9.12.0",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^19.2.0",
     "react-dropzone": "^14.3.8",
     "react-error-boundary": "^6.0.0",

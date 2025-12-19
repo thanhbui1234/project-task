@@ -11,23 +11,17 @@ export const useUpdateTask = (projectId: string) => {
   const { mutate: updateTask, isPending } = useMutation<
     void,
     Error,
-    IUpdateTaskSchema,
+    Partial<IUpdateTaskSchema> & { taskId: string },
     void
   >({
-    mutationFn: (data: IUpdateTaskSchema) =>
+    mutationFn: (data) =>
       api.put(API_ENDPOINTS.UPDATE_TASK, {
         projectId: projectId,
-        taskId: data.taskId,
-        name: data.name,
-        description: data.description,
-        assignedTo: data.assignedTo,
-        status: data.status,
-        priority: data.priority as string,
-        startAt: data.startAt,
-        endAt: data.endAt,
+        ...data,
       }),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: taskKeys.list({ projectId }) });
+      // Invalidate all field queries related to tasks to ensure lists with pagination (which include page/take params) are refreshed
+      queryClient.invalidateQueries({ queryKey: taskKeys.all() });
       queryClient.invalidateQueries({
         queryKey: taskDetailKeys.details(variables.taskId),
       });

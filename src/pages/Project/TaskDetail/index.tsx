@@ -69,6 +69,8 @@ import {
 import { STATUS_CONFIG_TASK } from '@/consts/task';
 import { toast } from 'sonner';
 import DropzoneComponent from '@/components/ui/Dropzone';
+import { queryClient } from '@/lib';
+import { taskDetailKeys } from '@/utils/queryKeyFactory';
 
 // Status config with colors and icons
 
@@ -108,6 +110,7 @@ export const TaskDetail = () => {
   const { data: task, isLoading } = useGetDetailTask({
     taskId: taskId as string,
   });
+  console.log(task?.status, 'statu');
   const { data: employeesData } = useGetEmployee();
   const { updateTask, isPending: isUpdating } = useUpdateTask(
     projectId as string
@@ -137,7 +140,7 @@ export const TaskDetail = () => {
     handleSubmit,
     reset,
     control,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = methods;
 
   // Typed control for InputField
@@ -160,7 +163,21 @@ export const TaskDetail = () => {
   }, [task, reset]);
 
   const onSubmit = (data: IUpdateTaskSchema) => {
-    updateTask(data, {
+    const payload: Partial<IUpdateTaskSchema> & { taskId: string } = {
+      taskId: data.taskId,
+    };
+
+    // Only include dirty fields
+    (Object.keys(dirtyFields) as Array<keyof IUpdateTaskSchema>).forEach(
+      (key) => {
+        if (key !== 'taskId') {
+          // @ts-ignore
+          payload[key] = data[key];
+        }
+      }
+    );
+
+    updateTask(payload, {
       onSuccess: () => {
         setIsEditModalOpen(false);
       },
@@ -185,12 +202,7 @@ export const TaskDetail = () => {
     if (task) {
       updateTask({
         taskId: task.id,
-        name: task.name,
-        description: task.description || '',
         status: newStatus,
-        assignedTo: task.assignedTo || undefined,
-        startAt: task.startAt ? new Date(task.startAt).getTime() : undefined,
-        endAt: task.endAt ? new Date(task.endAt).getTime() : undefined,
       });
     }
   };
@@ -527,7 +539,7 @@ export const TaskDetail = () => {
 
             {/* Activity / Comments Section */}
             {task.status === STATUS_TASK.COMPLETED && (
-              <motion.div variants={itemVariants}>
+              <motion.div variants={itemVariants} initial="hidden" animate="visible">
                 <motion.div
                   variants={cardHoverVariants}
                   initial="rest"
@@ -546,7 +558,9 @@ export const TaskDetail = () => {
                         projectId={task.projectId}
                         taskId={task.id}
                         onUploadSuccess={() => {
-                          // Optional: Invalidate queries if needed to show new files
+                          queryClient.invalidateQueries({
+                            queryKey: taskDetailKeys.details(task.id),
+                          });
                         }}
                       />
 

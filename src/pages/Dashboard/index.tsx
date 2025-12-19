@@ -18,7 +18,10 @@ import { EncryptedText } from '@/components/ui/encrypted-text';
 import { useGetMyProject } from '@/hooks/dashboard/useGetMyProject';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useGetMe } from '@/hooks/profile/useGetMe';
+import ListMolbie from '@/components/ui/ListMolbie';
+import { useIsMobile } from '@/hooks/use-mobile';
 export default function Dashboard() {
+  const isMobile = useIsMobile();
   const { data: profile } = useGetMe();
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageMyProject, setCurrentPageMyProject] = useState(1);
@@ -62,7 +65,6 @@ export default function Dashboard() {
         <DashboardTotal dashboard={dashboard as IDashboardResponse} />
         <div className="flex flex-col gap-10 md:flex-row">
           <div className="mt-8 w-full rounded-xl border border-slate-200 bg-white p-4 md:w-[60%] dark:border-slate-800 dark:bg-slate-950">
-            {/* Header */}
             <div className="mb-4 flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold">
@@ -79,19 +81,20 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Divider */}
             <div className="mb-4 h-px w-full bg-slate-200 dark:bg-slate-800" />
-
-            {/* Table */}
-            <DataTableDemo
-              columns={taskColumns}
-              data={slowProject?.docs ?? []}
-              meta={slowProject?.meta}
-              onPageChange={handlePageChange}
-              isLoading={isLoadingProject}
-              onRowClick={(task) => navigate(`/task/${task.id}`)}
-              showFilter={false}
-            />
+            {isMobile ? (
+              <ListMolbie data={slowProject?.docs ?? []} />
+            ) : (
+              <DataTableDemo
+                columns={taskColumns}
+                data={slowProject?.docs ?? []}
+                meta={slowProject?.meta}
+                onPageChange={handlePageChange}
+                isLoading={isLoadingProject}
+                onRowClick={(task) => navigate(`/task/${task.id}`)}
+                showFilter={false}
+              />
+            )}
           </div>
           <ChartPieLabel
             data={dashboardPercentage as IDashboardPercentageResponse}
@@ -113,15 +116,19 @@ export default function Dashboard() {
               </p>
             </div>
           </div>
-          <DataTableDemo
-            columns={taskColumns}
-            data={myProject?.docs ?? []}
-            meta={myProject?.meta}
-            onPageChange={handlePageChangeMyProject}
-            isLoading={isLoadingMyProject}
-            onRowClick={(task) => navigate(`/task/${task.id}`)}
-            showFilter={false}
-          />
+          {isMobile ? (
+            <ListMolbie data={myProject?.docs ?? []} />
+          ) : (
+            <DataTableDemo
+              columns={taskColumns}
+              data={myProject?.docs ?? []}
+              meta={myProject?.meta}
+              onPageChange={handlePageChangeMyProject}
+              isLoading={isLoadingMyProject}
+              onRowClick={(task) => navigate(`/task/${task.id}`)}
+              showFilter={false}
+            />
+          )}
         </div>
       </div>
     </div>
