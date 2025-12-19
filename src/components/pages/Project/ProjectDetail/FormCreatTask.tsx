@@ -28,7 +28,7 @@ export const FormCreatTask = ({
   const isUpdate = mode === 'update';
   const {
     control,
-    formState: { errors, dirtyFields },
+    formState: { errors },
   } = useFormContext();
 
   return (
