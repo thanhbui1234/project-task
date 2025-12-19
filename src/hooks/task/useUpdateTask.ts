@@ -33,9 +33,6 @@ export const useUpdateTask = (projectId: string) => {
       });
       toast.success('Cập nhật công việc thành công');
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
   });
 
   return { updateTask, isPending };

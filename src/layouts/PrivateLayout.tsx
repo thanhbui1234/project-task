@@ -44,7 +44,7 @@ export function PrivateLayout() {
               </div>
               <div className="flex items-center gap-2">
                 <Avatar onClick={() => navigate(URL_PATH.PROFILE)} className="h-6 w-6 rounded cursor-pointer">
-                  <AvatarImage className=" rounded-full h-7 w-8" src={profile?.avatar.path} alt={profile?.name} />
+                  <AvatarImage className=" rounded-full h-7 w-8" src={profile?.avatar?.path} alt={profile?.name} />
                   <AvatarFallback>{profile?.name?.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
               </div>

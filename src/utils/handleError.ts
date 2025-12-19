@@ -33,7 +33,7 @@ const handleCommonError = (
   // Lấy error code
   const errorCode = getErrorCode(error);
   // Lấy message từ API (dùng làm fallback)
-
+  console.log(errorCode);
   //  ƯU TIÊN: Lấy message từ error code mapping trong code
   const codeMappedMessage = getErrorMessage(errorCode as ErrorCodeType);
   // Thứ tự ưu tiên:
