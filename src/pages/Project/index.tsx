@@ -92,10 +92,20 @@ export default function Projects() {
   const handleEdit = (project: IProject) => {
     setSelectedProject(project);
     setMode('edit');
+
+    const getDate = (val: string | number | null | undefined) => {
+      if (!val) return undefined;
+      const d = new Date(val);
+      const t = d.getTime();
+      return isNaN(t) || t === 0 ? undefined : t;
+    };
+
     form.reset({
       name: project.name,
       client: project.client,
       status: project.status,
+      startAt: getDate(project.startAt),
+      endAt: getDate(project.endAt),
     });
     setOpenModal(true);
   };

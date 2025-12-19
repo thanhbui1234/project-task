@@ -19,7 +19,6 @@ export const useUpdateProject = () => {
       toast.success('Cập nhật dự án thành công');
     },
     onError: (error) => {
-      console.log(error);
       toast.error(error.message);
     },
   });

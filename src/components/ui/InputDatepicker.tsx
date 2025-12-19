@@ -12,15 +12,19 @@ import {
 export const InputDatepicker = ({
   value,
   onChange,
+  disabled,
 }: {
   value: number | undefined;
   onChange: (value: number | undefined) => void;
+  disabled?: boolean;
 }) => {
   return (
     <div className="w-full">
       <Popover>
         <PopoverTrigger asChild>
           <Button
+            type="button"
+            disabled={disabled}
             variant="outline"
             data-empty={!value}
             className="data-[empty=true]:text-muted-foreground w-full justify-start text-left font-normal"

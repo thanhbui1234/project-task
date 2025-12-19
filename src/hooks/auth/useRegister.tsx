@@ -12,7 +12,6 @@ export const useRegister = () => {
   >({
     mutationFn: (data: registerType) => api.post(API_ENDPOINTS.REGISTER, data),
     onSuccess: () => {
-      console.log('vao day');
       toast.success('Đăng ký thành công');
     },
     onError: (error) => {

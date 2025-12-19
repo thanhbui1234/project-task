@@ -40,12 +40,10 @@ export default function Dashboard() {
   });
 
   const handlePageChange = (page: number) => {
-    console.log('page', page);
     setCurrentPage(page);
   };
 
   const handlePageChangeMyProject = (page: number) => {
-    console.log('page', page);
     setCurrentPageMyProject(page);
   };
 

@@ -9,7 +9,6 @@ import { type IProfileSchema } from "@/schemas/Profile";
 export const useUpdateProfile = () => {
   return useMutation<void, Error, IProfileSchema>({
     mutationFn: (data) => {
-      console.log(data);
       return api.put(API_ENDPOINTS.UPDATE_PROFILE, data);
     },
     onSuccess: () => {
