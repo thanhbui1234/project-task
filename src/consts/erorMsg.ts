@@ -7,6 +7,7 @@ export const ERROR_MESSAGES: Record<ErrorCodeType, string> = {
     'Tài khoản không hoặc mật khẩu không chính xác',
   [ERROR_CODE.UNKNOWN_ERROR]: 'Đã xảy ra lỗi không xác định',
   [ERROR_CODE.WRONG_PASSWORD]: 'Mật khẩu không chính xác',
+  [ERROR_CODE.TASK_ALREADY_COMPLATE]: 'Công việc đã hoàn thành',
 };
 
 export const getErrorMessage = (code: ErrorCodeType): string => {

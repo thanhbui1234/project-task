@@ -563,11 +563,11 @@ export const TaskDetail = () => {
                                 layoutId={`file-${file.id}`}
                                 whileHover={{ scale: 1.05, y: -2 }}
                                 whileTap={{ scale: 0.95 }}
-                                onClick={() => setPreviewImage(file.path)}
+                                onClick={() => setPreviewImage(file?.path)}
                                 className="group relative aspect-square cursor-zoom-in overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-xs transition-colors dark:border-slate-800 dark:bg-slate-800"
                               >
                                 <img
-                                  src={file.path}
+                                  src={file?.path}
                                   alt="Attached file"
                                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                                   loading="lazy"
