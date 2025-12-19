@@ -7,7 +7,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -40,7 +39,7 @@ export function AppSidebar() {
             >
               <Link to={URL_PATH.DASHBOARD} className="flex w-full justify-center">
                 <img
-                  className="h-28 w-28 object-contain transition-transform hover:scale-105"
+                  className="h-40 w-40 object-contain transition-transform hover:scale-105"
                   src="/logo.png"
                   alt="logo"
                 />
@@ -51,7 +50,6 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
