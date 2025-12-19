@@ -32,7 +32,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -356,15 +355,15 @@ export const TaskDetail = () => {
                   <Link2 className="mr-2 h-4 w-4" />
                   Liên kết task khác
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
+                {/* <DropdownMenuSeparator />  */}
+                {/* <DropdownMenuItem
                   className="cursor-pointer text-red-600 focus:text-red-600"
                   variant="destructive"
                   onClick={() => setIsDeleteModalOpen(true)}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
                   Xóa task
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

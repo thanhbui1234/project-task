@@ -130,6 +130,8 @@ export const createTaskSchema = z
     status: z.string().min(1, {
       message: 'Trạng thái task không được để trống',
     }),
+    assignedTo: z.string().optional(),
+    priority: z.string().optional(),
 
     startAt: z.preprocess(
       (val) => (val instanceof Date ? val.getTime() : val),

@@ -100,7 +100,7 @@ export const FormCreatTask = ({
             </p>
           )}
         </div>
-        <div className="grid gap-2">
+        <div className="grid grid-c gap-2 w-full ">
           <Label>Độ ưu tiên</Label>
           <Controller
             control={control}

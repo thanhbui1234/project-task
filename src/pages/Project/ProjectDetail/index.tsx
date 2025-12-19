@@ -8,7 +8,7 @@ import {
   type TaskTableMeta,
 } from '@/components/ui/table/taskColumns';
 import { DataTableDemo } from '@/components/ui/table/TableCommon';
-import { STATUS_TASK } from '@/consts/task';
+import { STATUS_TASK, PRIORITY_TASK } from '@/consts/task';
 import { useGetEmployee } from '@/hooks/employee/useGetEmployee';
 import { useCreatTask } from '@/hooks/task/useCreateTask';
 import { useGetTasks } from '@/hooks/task/useGetTask';
@@ -89,6 +89,8 @@ export const ProjectDetail = () => {
       name: '',
       description: '',
       status: STATUS_TASK.STARTED,
+      priority: PRIORITY_TASK.LOW,
+      assignedTo: '',
       startAt: undefined,
       endAt: undefined,
     },
@@ -111,7 +113,21 @@ export const ProjectDetail = () => {
   };
 
   const onSubmit = (data: ICreateTaskSchema) => {
-    createTask(data as unknown as ICreateTaskSchema);
+    const { dirtyFields } = form.formState;
+
+    // Initialize with fields that must always be sent (defaults or required)
+    const submitData: Partial<ICreateTaskSchema> = {
+      status: data.status,
+      priority: data.priority,
+    };
+
+    Object.keys(dirtyFields).forEach((key) => {
+      const k = key as keyof ICreateTaskSchema;
+      // @ts-ignore
+      submitData[k] = data[k];
+    });
+
+    createTask(submitData as ICreateTaskSchema);
     setOpenModal(false);
     form.reset();
   };
