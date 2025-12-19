@@ -1,4 +1,4 @@
-import { Home, Command, User, LogOut, Users } from 'lucide-react';
+import { Home, User, LogOut, Users } from 'lucide-react';
 import { GoTasklist } from 'react-icons/go';
 import { logout } from '@/utils/auth';
 import { useNavigate } from 'react-router-dom';
