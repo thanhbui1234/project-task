@@ -1,19 +1,11 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { ITask } from '@/types/task';
 import type { IEmployee } from '@/types/employee';
 import { PRIORITY_TASK, STATUS_TASK } from '@/consts/task';
 import { Badge } from '@/components/ui/badge';
+import { ArrowUpDown } from 'lucide-react';
 
 const getStatusLabel = (status: string) => {
   switch (status) {
