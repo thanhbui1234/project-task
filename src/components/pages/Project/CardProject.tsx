@@ -9,7 +9,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-import { MoreVertical, Edit, Trash2 } from 'lucide-react';
+import { MoreVertical, Edit, Trash2, Clock, AlertTriangle } from 'lucide-react';
 import { type IProject } from '@/types/project';
 import {
   DropdownMenu,
@@ -19,6 +19,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { isDirector } from '@/utils/role';
 import { Link } from 'react-router-dom';
+import { getExpireStatus } from '@/utils/expriceDate';
+import { EXPIRE_STATUS } from '@/consts/exprie';
 
 const statusConfig: Record<
   string,
@@ -36,6 +38,22 @@ const statusConfig: Record<
     label: 'Hoàn thành',
     className: 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200/80'
   },
+};
+
+const expireUIConfig = {
+  [EXPIRE_STATUS.ABOUT_TO_EXPIRE]: {
+    label: 'Sắp hết hạn',
+    badgeClass: 'bg-orange-500 text-white border-none shadow-lg shadow-orange-500/30 animate-pulse',
+    cardClass: 'border-orange-500/50 ring-1 ring-orange-500/20 shadow-orange-50',
+    icon: <Clock className="mr-1 h-3 w-3" />,
+  },
+  [EXPIRE_STATUS.EXPIRED]: {
+    label: 'Đã hết hạn',
+    badgeClass: 'bg-red-600 text-white border-none shadow-lg shadow-red-600/30',
+    cardClass: 'border-red-600 ring-2 ring-red-600/10 shadow-red-50',
+    icon: <AlertTriangle className="mr-1 h-3 w-3" />,
+  },
+  [EXPIRE_STATUS.ACTIVE]: null
 };
 
 const images = [
@@ -103,38 +121,52 @@ export const ProjectGrid = ({
           className: 'bg-gray-100 text-gray-700',
         };
 
+        const expireStatus = project.endAt ? getExpireStatus(project.endAt) : EXPIRE_STATUS.ACTIVE;
+        const expireUI = expireUIConfig[expireStatus as keyof typeof expireUIConfig];
+
         return (
           <Card
             key={project.id}
-            className="group relative h-full rounded-2xl border border-gray-200/80 bg-white transition-all hover:-translate-y-1 hover:shadow-lg pt-0"
+            className={`group relative h-full rounded-2xl border bg-white transition-all hover:-translate-y-1 hover:shadow-xl pt-0 ${expireUI ? expireUI.cardClass : 'border-gray-200/80 shadow-sm'
+              }`}
           >
             {/* STATUS BADGE – GÓC TRÁI */}
             <Badge
-              className={`absolute top-3 left-3 z-10 text-xs font-medium backdrop-blur-sm ${status.className}`}
+              className={`absolute top-3 left-3 z-10 text-[10px] font-semibold uppercase tracking-wider backdrop-blur-md ${status.className}`}
             >
               {status.label}
             </Badge>
 
-            {/* ACTION MENU – GÓC PHẢI */}
+            {/* EXPIRE BADGE – GÓC PHẢI (Nếu có) */}
+            {expireUI && (
+              <Badge
+                className={`absolute top-3 right-3 z-10 flex items-center px-2 py-0.5 text-[10px] font-bold uppercase tracking-tight ${expireUI.badgeClass}`}
+              >
+                {expireUI.icon}
+                {expireUI.label}
+              </Badge>
+            )}
+
+            {/* ACTION MENU – GÓC PHẢI (Ẩn đi nếu có Badge hết hạn và không hover) */}
             {isDirector() && (
-              <div className="absolute top-3 right-3 z-10 opacity-0 transition group-hover:opacity-100">
+              <div className={`absolute top-3 right-3 z-20 transition-opacity duration-200 ${expireUI ? 'opacity-0 group-hover:opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 rounded-full bg-white"
+                      className="h-7 w-7 rounded-full bg-white/90 shadow-sm backdrop-blur-sm hover:bg-white"
                     >
-                      <MoreVertical className="h-4 w-4" />
+                      <MoreVertical className="h-4 w-4 text-gray-600" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => onEdit?.(project)}>
+                  <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuItem onClick={() => onEdit?.(project)} className="cursor-pointer">
                       <Edit className="mr-2 h-4 w-4" />
                       Chỉnh sửa
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      className="text-red-600"
+                      className="text-red-600 cursor-pointer"
                       onClick={() => {
                         setSelectedProject(project);
                         setOpenDelete(true);
@@ -153,54 +185,61 @@ export const ProjectGrid = ({
                 <img
                   src={getImage(project.id)}
                   alt={project.name}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
               </div>
 
-              <CardHeader className="pb-3 pt-4">
-                <CardTitle className="line-clamp-1 text-lg">
+              <CardHeader className="pb-2 pt-4">
+                <CardTitle className="line-clamp-1 text-lg font-bold text-gray-800">
                   {project.name || 'Chưa đặt tên'}
                 </CardTitle>
 
-                <CardDescription className="line-clamp-2">
+                <CardDescription className="line-clamp-1 text-xs font-medium text-gray-500">
                   {project.client
                     ? `Khách hàng: ${project.client}`
                     : 'Chưa có khách hàng'}
                 </CardDescription>
               </CardHeader>
 
-              <CardContent className="space-y-3">
-                {/* Task count */}
-                <div className="text-xs text-gray-500">
-                  {project.taskCount} công việc
+              <CardContent className="space-y-4">
+                {/* Task count & Progress placeholder */}
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                    {project.taskCount} công việc
+                  </span>
                 </div>
 
                 {/* START / END DATE */}
-                <div className="space-y-1 text-xs text-gray-600">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Ngày bắt đầu:</span>
-                    <span className="font-medium">
+                <div className="space-y-2 rounded-xl bg-gray-50 p-2.5">
+                  <div className="flex justify-between items-center text-[11px]">
+                    <span className="text-gray-400 font-medium">Bắt đầu:</span>
+                    <span className="font-semibold text-gray-700">
                       {formatDate(project.startAt)}
                     </span>
                   </div>
 
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Ngày kết thúc:</span>
-                    <span className="font-medium">
+                  <div className="flex justify-between items-center text-[11px]">
+                    <span className="text-gray-400 font-medium">Kết thúc:</span>
+                    <span className={`font-bold ${expireStatus === EXPIRE_STATUS.EXPIRED ? 'text-red-600' : 'text-gray-700'}`}>
                       {formatDate(project.endAt)}
                     </span>
                   </div>
                 </div>
 
                 {/* OWNER */}
-                <div className="flex items-center gap-2 pt-1">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-xs font-bold text-white">
-                    {project.owner.charAt(0).toUpperCase()}
+                <div className="flex items-center justify-between pt-1 border-t border-gray-100">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-[10px] font-bold text-white shadow-sm">
+                      {project.owner.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="truncate text-[11px] font-medium text-gray-600">
+                      {project.owner.split('@')[0]}
+                    </span>
                   </div>
-                  <span className="truncate text-xs text-gray-600">
-                    {project.owner.split('@')[0]}
-                  </span>
+                  <div className="text-[10px] font-medium text-gray-400">
+                    ID: {project.id.toString().slice(0, 5)}...
+                  </div>
                 </div>
               </CardContent>
             </Link>
@@ -210,3 +249,4 @@ export const ProjectGrid = ({
     </div>
   );
 };
+
