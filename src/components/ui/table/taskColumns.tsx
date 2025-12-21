@@ -13,21 +13,7 @@ export interface TaskTableMeta {
 }
 
 // Hàm helper để lấy tên employee từ ID
-const getEmployeeNames = (
-  employeeIds: string | string[] | null | undefined,
-  employees: IEmployee[]
-): string => {
-  if (!employeeIds) return 'Chưa giao';
-  const ids = Array.isArray(employeeIds) ? employeeIds : [employeeIds];
-  if (ids.length === 0) return 'Chưa giao';
 
-  return ids
-    .map((id) => {
-      const employee = employees.find((emp) => emp.id === id);
-      return employee?.name ?? employee?.email ?? 'Không xác định';
-    })
-    .join(', ');
-};
 
 export const taskColumns: ColumnDef<ITask>[] = [
   {
