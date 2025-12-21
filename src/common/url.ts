@@ -10,6 +10,7 @@ const PRIVATE_PATH = {
   TASK_DETAIL: '/task/:id',
   EMPLOYEE: '/employee',
   PROFILE: '/profile',
+  CREATE_PROFILE: '/employee/create',
 };
 
 const URL_PATH = {
