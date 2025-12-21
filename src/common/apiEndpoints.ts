@@ -25,4 +25,7 @@ export const API_ENDPOINTS = {
   // Upload
   UPLOAD_FILE: '/file/upload-files',
   UPLOAD_FILE_TASK: '/project/files',
+  // Comments
+  GET_COMMENTS: '/project/task/comment',
+  CREATE_COMMENT: '/project/task/comment',
 };

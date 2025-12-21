@@ -60,7 +60,7 @@ import {
   User,
 } from 'lucide-react';
 import { MultiSelect, type MultiSelectOption } from '@/components/ui/MultiSelect';
-
+import { CommentComponent } from '@/components/pages/Comment';
 import {
   PRIORITY_CONFIG_TASK,
   STATUS_TASK,
@@ -71,6 +71,7 @@ import { toast } from 'sonner';
 import DropzoneComponent from '@/components/ui/Dropzone';
 import { queryClient } from '@/lib';
 import { taskDetailKeys } from '@/utils/queryKeyFactory';
+import { useGetComments } from '@/hooks/task/comment/useGetComments';
 
 // Status config with colors and icons
 
@@ -106,7 +107,7 @@ export const TaskDetail = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-
+  const { data: comments } = useGetComments(taskId as string);
   const { data: task, isLoading } = useGetDetailTask({
     taskId: taskId as string,
   });
@@ -596,6 +597,7 @@ export const TaskDetail = () => {
                 </motion.div>
               </motion.div>
             )}
+            <CommentComponent taskId={taskId as string} commentsData={comments} />
           </motion.div>
 
           {/* RIGHT - Sidebar */}
