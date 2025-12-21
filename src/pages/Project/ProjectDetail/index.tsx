@@ -331,7 +331,7 @@ export const ProjectDetail = () => {
                 <p className="text-3xl font-black text-gray-900">
                   {projectDetail?.acceptedCount ?? 0}
                 </p>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 mt-1">Tiếp nhận</p>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 mt-1">Đã nhận việc</p>
               </div>
             </div>
 
@@ -344,7 +344,7 @@ export const ProjectDetail = () => {
                 <p className="text-3xl font-black text-gray-900">
                   {projectDetail?.inProgressCount ?? 0}
                 </p>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 mt-1">Đang làm</p>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 mt-1">Đang thực hiện</p>
               </div>
             </div>
 
