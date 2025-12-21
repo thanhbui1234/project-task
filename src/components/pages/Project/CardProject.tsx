@@ -4,7 +4,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -196,12 +195,6 @@ export const ProjectGrid = ({
                 <CardTitle className="line-clamp-1 text-lg font-bold text-gray-800">
                   {project.name || 'Chưa đặt tên'}
                 </CardTitle>
-
-                <CardDescription className="line-clamp-1 text-xs font-medium text-gray-500">
-                  {project.client
-                    ? `Khách hàng: ${project.client}`
-                    : 'Chưa có khách hàng'}
-                </CardDescription>
               </CardHeader>
 
               <CardContent className="space-y-4">
