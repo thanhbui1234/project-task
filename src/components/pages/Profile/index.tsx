@@ -155,8 +155,8 @@ export const Profile = () => {
           </div>
 
           {/* Profile Info */}
-          <div className="px-4 sm:px-6 md:px-8 pb-6 md:pb-8">
-            <div className="flex flex-col sm:flex-row items-start sm:items-end gap-3 sm:gap-4 md:gap-6 -mt-12 sm:-mt-16 md:-mt-20 mb-4 md:mb-6">
+          <div className="relative z-10 px-4 sm:px-6 md:px-8 pb-6 md:pb-8">
+            <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 sm:gap-6 -mt-12 sm:-mt-16 md:-mt-20 mb-4 md:mb-6">
               {/* Avatar */}
               <motion.div
                 initial={{ scale: 0 }}
@@ -204,13 +204,13 @@ export const Profile = () => {
               </motion.div>
 
               {/* User Info */}
-              <div className="flex-1 pb-0 sm:pb-4">
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 line-clamp-2">
-                  {profile?.name}
+              <div className="flex-1 min-w-0 pb-0 sm:pb-4 text-center sm:text-left">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 mb-1 truncate">
+                  {profile?.name || '...'}
                 </h1>
-                <p className="text-gray-600 text-xs sm:text-sm md:text-base mb-2 md:mb-3 flex items-center gap-1.5 break-all">
+                <p className="text-slate-600 text-xs sm:text-sm md:text-base mb-2 md:mb-4 flex items-center justify-center sm:justify-start gap-1.5 break-all">
                   <Mail className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                  <span className="line-clamp-1">{profile?.email}</span>
+                  <span className="truncate">{profile?.email || '...'}</span>
                 </p>
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="px-2 sm:px-3 py-0.5 sm:py-1 bg-blue-100 text-blue-700 rounded text-xs sm:text-sm font-semibold">
