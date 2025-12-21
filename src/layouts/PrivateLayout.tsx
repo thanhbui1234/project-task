@@ -9,6 +9,7 @@ import { URL_PATH } from '@/common/url';
 import { AppSidebar } from '@/components/ui/app-sidebar';
 import { useGetMe } from '@/hooks/profile/useGetMe';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
+import { ROLES } from '@/consts/role';
 export function PrivateLayout() {
   const hasToken = getToken();
   const location = useLocation();
@@ -29,6 +30,12 @@ export function PrivateLayout() {
         state={{ from: location.pathname }}
       />
     );
+  }
+
+  // Redirect role-specific users trying to access unauthorized base dashboard
+  const userRole = profile?.role;
+  if (userRole && userRole === ROLES.CUSTOMER && location.pathname === URL_PATH.DASHBOARD) {
+    return <Navigate to={URL_PATH.PROJECT} replace />;
   }
 
   return (

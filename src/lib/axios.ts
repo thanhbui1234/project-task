@@ -27,7 +27,7 @@ api.interceptors.response.use(
   (error) => {
     const status = error?.response?.status;
     // Nếu token hết hạn hoặc không hợp lệ => logout
-    if (status === 401 || status === 403) {
+    if (status === 401) {
       clearAuth();
       // Optionally: chuyển về trang login nếu bạn muốn
       // window.location.href = "/login"

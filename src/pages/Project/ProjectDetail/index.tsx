@@ -43,6 +43,7 @@ import { STATUS_PROJECT } from '@/consts/statusProject';
 import { createProjectSchema, type ICreateProjectSchema } from '@/schemas/Project';
 import { useUpdateProject } from '@/hooks/project/useUpdateProject';
 import { Button } from '@/components/ui/button';
+import { isDirector } from '@/utils/role';
 
 const ProjectFormContent = lazy(() =>
   import('@/components/pages/Project/FormCreatProject').then(module => ({ default: module.ProjectFormContent }))
@@ -216,17 +217,18 @@ export const ProjectDetail = () => {
             }`}>
             {/* Trang trí background */}
             <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-indigo-50/50 blur-3xl group-hover:bg-indigo-100/50 transition-colors duration-500" />
-
-            <div className="absolute top-6 right-6 z-10">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm border border-gray-100 shadow-sm hover:bg-white hover:scale-110 transition-all text-gray-400 hover:text-indigo-600"
-                onClick={handleOpenSettings}
-              >
-                <Settings className="h-5 w-5" />
-              </Button>
-            </div>
+            {isDirector() && (
+              <div className="absolute top-6 right-6 z-10">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm border border-gray-100 shadow-sm hover:bg-white hover:scale-110 transition-all text-gray-400 hover:text-indigo-600"
+                  onClick={handleOpenSettings}
+                >
+                  <Settings className="h-5 w-5" />
+                </Button>
+              </div>
+            )}
 
             <div className="relative flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
               {/* Left - Project Info */}
