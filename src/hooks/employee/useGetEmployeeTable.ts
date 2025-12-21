@@ -15,6 +15,8 @@ interface GetTasksParams {
   name?: string;
 }
 
+import { employeeKeys } from '@/utils/queryKeyFactory';
+
 export function useGetEmployeesTable({
   page = DEFAULT_PAGE,
   take = TAKE_PAGE,
@@ -25,8 +27,9 @@ export function useGetEmployeesTable({
   email,
   name,
 }: GetTasksParams) {
+  const params = { page, take, order, phoneNumber, role, sort, email, name };
   return useQuery({
-    queryKey: ['employees-table', { page, take, order, phoneNumber, role, sort, email, name }],
+    queryKey: employeeKeys.list(params),
     queryFn: async (): Promise<IEmployeeResponse> => {
       // Axios interceptor đã return response.data.data
       // Nên response ở đây đã là { docs, meta }

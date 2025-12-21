@@ -17,7 +17,7 @@ export const useCreateEmployee = () => {
     mutationFn: (data: createMemberType) => api.post(API_ENDPOINTS.REGISTER, data),
     onSuccess: () => {
       toast.success('Tạo nhân viên thành công');
-      queryClient.invalidateQueries({ queryKey: employeeKeys.all() });
+      queryClient.refetchQueries({ queryKey: employeeKeys.all() });
     },
     onError: (error) => {
       toast.error(error.message || 'Có lỗi xảy ra khi tạo nhân viên');

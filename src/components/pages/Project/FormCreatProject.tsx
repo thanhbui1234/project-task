@@ -13,6 +13,7 @@ import { STATUS_PROJECT } from '@/consts/statusProject';
 import { InputDatepicker } from '@/components/ui/InputDatepicker';
 
 import { useEffect } from 'react';
+import { useGetCustomer } from '@/hooks/employee/useGetCustomer';
 
 export const ProjectFormContent = () => {
   const {
@@ -21,7 +22,12 @@ export const ProjectFormContent = () => {
     formState: { errors, defaultValues },
     watch,
   } = useFormContext();
-
+  const { data: customers } = useGetCustomer();
+  const customerOptions = customers?.docs.map((customer) => ({
+    value: customer.id,
+    label: customer.name,
+  })) || [];
+  console.log(customerOptions, 'customerOptions')
   const status = watch('status');
   const isCompleted = status === STATUS_PROJECT.COMPLETED;
 
@@ -46,14 +52,35 @@ export const ProjectFormContent = () => {
         errors={errors}
       />
 
-      <InputField
-        control={control}
-        name="client"
-        label="Khách hàng"
-        placeholder="Tên khách hàng"
-        errors={errors}
-      />
-
+      <div className="grid gap-2">
+        <Label>Khách hàng</Label>
+        <Controller
+          control={control}
+          name="customers"
+          render={({ field }) => (
+            <Select
+              onValueChange={(val) => field.onChange([val])}
+              value={field.value?.[0] || ''}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Chọn khách hàng" />
+              </SelectTrigger>
+              <SelectContent>
+                {customerOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+        {errors.customers && (
+          <p className="text-xs text-red-500">
+            {errors.customers.message as string}
+          </p>
+        )}
+      </div>
       <div className="grid gap-2">
         <Label>Trạng thái</Label>
         <Controller

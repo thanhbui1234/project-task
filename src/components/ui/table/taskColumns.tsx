@@ -13,13 +13,20 @@ export interface TaskTableMeta {
 }
 
 // Hàm helper để lấy tên employee từ ID
-const getEmployeeName = (
-  employeeId: string | null,
+const getEmployeeNames = (
+  employeeIds: string | string[] | null | undefined,
   employees: IEmployee[]
 ): string => {
-  if (!employeeId) return 'Chưa giao';
-  const employee = employees.find((emp) => emp.id === employeeId);
-  return employee?.name ?? employee?.email ?? 'Không xác định';
+  if (!employeeIds) return 'Chưa giao';
+  const ids = Array.isArray(employeeIds) ? employeeIds : [employeeIds];
+  if (ids.length === 0) return 'Chưa giao';
+
+  return ids
+    .map((id) => {
+      const employee = employees.find((emp) => emp.id === id);
+      return employee?.name ?? employee?.email ?? 'Không xác định';
+    })
+    .join(', ');
 };
 
 export const taskColumns: ColumnDef<ITask>[] = [
@@ -95,15 +102,6 @@ export const taskColumns: ColumnDef<ITask>[] = [
           {config.label}
         </Badge>
       );
-    },
-  },
-  {
-    accessorKey: 'assignedTo',
-    header: 'Người được giao',
-    cell: ({ row, table }) => {
-      const assignedTo = row.getValue('assignedTo') as string | null;
-      const employees = (table.options.meta as TaskTableMeta)?.employees ?? [];
-      return <div>{getEmployeeName(assignedTo, employees)}</div>;
     },
   },
   {

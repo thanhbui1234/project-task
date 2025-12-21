@@ -8,6 +8,7 @@ const BASE_KEYS = {
   SLOW_PROJECT: 'slowProject',
   MY_PROJECT: 'myProject',
   PROFILE: 'profile',
+  CUSTOMERS: 'customers',
 } as const;
 
 const QUERY_KEY_TYPE = {
@@ -59,6 +60,7 @@ const dashboardPercentageKeys = createQueryKeys('DASHBOARD_PERCENTAGE');
 const slowProjectKeys = createQueryKeys('SLOW_PROJECT');
 const myProjectKeys = createQueryKeys('MY_PROJECT');
 const profileKeys = createQueryKeys('PROFILE');
+const customersKeys = createQueryKeys('CUSTOMERS');
 export {
   projectKeys,
   employeeKeys,
@@ -69,4 +71,5 @@ export {
   slowProjectKeys,
   myProjectKeys,
   profileKeys,
+  customersKeys,
 };

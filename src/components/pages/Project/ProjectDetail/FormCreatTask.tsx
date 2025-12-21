@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { MultiSelect } from '@/components/ui/MultiSelect';
 
 import { PRIORITY_TASK, STATUS_TASK } from '@/consts/task';
 import type { IEmployee } from '@/types/employee';
@@ -134,25 +135,22 @@ export const FormCreatTask = ({
           <Label>Người được giao</Label>
           <Controller
             control={control}
-            name="assignedTo"
+            name="assignedUsers"
             render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Chọn người được giao" />
-                </SelectTrigger>
-                <SelectContent>
-                  {employees.map((employee) => (
-                    <SelectItem key={employee.id} value={employee.id}>
-                      {employee.name ?? employee.email}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <MultiSelect
+                options={employees.map((employee) => ({
+                  value: employee.id,
+                  label: employee.name ?? employee.email,
+                }))}
+                selected={field.value || []}
+                onChange={field.onChange}
+                placeholder="Chọn người được giao"
+              />
             )}
           />
-          {errors.assignedTo && (
+          {errors.assignedUsers && (
             <p className="text-destructive text-xs">
-              {errors.assignedTo.message as string}
+              {errors.assignedUsers.message as string}
             </p>
           )}
         </div>

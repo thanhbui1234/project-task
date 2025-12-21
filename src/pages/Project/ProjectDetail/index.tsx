@@ -1,6 +1,7 @@
 'use client';
 
 import { FormCreatTask } from '@/components/pages/Project/ProjectDetail/FormCreatTask';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { CustomModal } from '@/components/ui/DialogCustom';
 import {
@@ -27,8 +28,9 @@ import {
   Users,
   AlertTriangle,
   History,
+  Settings,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, lazy, Suspense } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TAKE_PAGE } from '@/consts/query';
@@ -37,6 +39,14 @@ import ListMolbie from '@/components/ui/ListMolbie';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getExpireStatus } from '@/utils/expriceDate';
 import { EXPIRE_STATUS } from '@/consts/exprie';
+import { STATUS_PROJECT } from '@/consts/statusProject';
+import { createProjectSchema, type ICreateProjectSchema } from '@/schemas/Project';
+import { useUpdateProject } from '@/hooks/project/useUpdateProject';
+import { Button } from '@/components/ui/button';
+
+const ProjectFormContent = lazy(() =>
+  import('@/components/pages/Project/FormCreatProject').then(module => ({ default: module.ProjectFormContent }))
+);
 
 const statusConfig: Record<
   string,
@@ -51,17 +61,17 @@ const statusConfig: Record<
     variant: 'secondary',
     className: 'bg-slate-100 text-slate-700',
   },
-  PENDING: {
+  [STATUS_PROJECT.PENDING]: {
     label: 'Đang chờ',
     variant: 'secondary',
     className: 'bg-amber-100 text-amber-700',
   },
-  IN_PROGRESS: {
+  [STATUS_PROJECT.IN_PROGRESS]: {
     label: 'Đang thực hiện',
     variant: 'default',
     className: 'bg-blue-100 text-blue-700',
   },
-  COMPLETED: {
+  [STATUS_PROJECT.COMPLETED]: {
     label: 'Hoàn thành',
     variant: 'outline',
     className: 'bg-emerald-100 text-emerald-700',
@@ -96,15 +106,28 @@ export const ProjectDetail = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
+  const [openProjectSettings, setOpenProjectSettings] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const { data: projectDetail } = useGetProjectDetail(projectId as string);
   const { createTask, isPending } = useCreatTask(projectId as string);
+  const { updateProject, isPending: isUpdatingProject } = useUpdateProject();
   const { data: employees } = useGetEmployee();
   const { data: tasksData, isLoading: isLoadingTasks } = useGetTasks({
     projectId: projectId as string,
     page: currentPage,
     take: TAKE_PAGE,
   });
+  const projectForm = useForm({
+    resolver: zodResolver(createProjectSchema),
+    defaultValues: {
+      name: '',
+      status: STATUS_PROJECT.PENDING,
+      customers: [],
+      startAt: undefined,
+      endAt: undefined,
+    },
+  });
+
   const form = useForm({
     resolver: zodResolver(createTaskSchema),
     defaultValues: {
@@ -112,13 +135,14 @@ export const ProjectDetail = () => {
       description: '',
       status: STATUS_TASK.STARTED,
       priority: PRIORITY_TASK.LOW,
-      assignedTo: '',
+      assignedUsers: [],
       startAt: undefined,
       endAt: undefined,
     },
   });
 
-  const expireStatus = projectDetail?.endAt ? getExpireStatus(projectDetail.endAt) : EXPIRE_STATUS.ACTIVE;
+  const isCompleted = projectDetail?.status === STATUS_PROJECT.COMPLETED;
+  const expireStatus = (projectDetail?.endAt && !isCompleted) ? getExpireStatus(projectDetail.endAt) : EXPIRE_STATUS.ACTIVE;
   const expireUI = expireUIConfig[expireStatus as keyof typeof expireUIConfig];
 
   // Memo tableMeta để tránh re-render không cần thiết
@@ -131,6 +155,19 @@ export const ProjectDetail = () => {
 
   const handleAdd = () => {
     setOpenModal(true);
+  };
+
+  const handleOpenSettings = () => {
+    if (projectDetail) {
+      projectForm.reset({
+        name: projectDetail.name,
+        status: projectDetail.status,
+        customers: Array.isArray(projectDetail.customers) ? projectDetail.customers : projectDetail.customers ? [projectDetail.customers] : [],
+        startAt: projectDetail.startAt || undefined,
+        endAt: projectDetail.endAt || undefined,
+      });
+      setOpenProjectSettings(true);
+    }
   };
 
   const handlePageChange = (page: number) => {
@@ -156,10 +193,17 @@ export const ProjectDetail = () => {
       description: '',
       status: STATUS_TASK.STARTED,
       priority: PRIORITY_TASK.LOW,
-      assignedTo: '',
+      assignedUsers: [],
       startAt: undefined,
       endAt: undefined,
     });
+  };
+
+  const onUpdateProject = (data: ICreateProjectSchema) => {
+    if (projectId) {
+      updateProject({ id: projectId, data });
+      setOpenProjectSettings(false);
+    }
   };
 
   return (
@@ -172,6 +216,17 @@ export const ProjectDetail = () => {
             }`}>
             {/* Trang trí background */}
             <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-indigo-50/50 blur-3xl group-hover:bg-indigo-100/50 transition-colors duration-500" />
+
+            <div className="absolute top-6 right-6 z-10">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-10 w-10 rounded-full bg-white/80 backdrop-blur-sm border border-gray-100 shadow-sm hover:bg-white hover:scale-110 transition-all text-gray-400 hover:text-indigo-600"
+                onClick={handleOpenSettings}
+              >
+                <Settings className="h-5 w-5" />
+              </Button>
+            </div>
 
             <div className="relative flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
               {/* Left - Project Info */}
@@ -219,7 +274,7 @@ export const ProjectDetail = () => {
                     </div>
                     <div>
                       <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Khách hàng</p>
-                      <p className="text-sm font-semibold text-gray-700">{projectDetail?.client || 'Chưa xác định'}</p>
+                      <p className="text-sm font-semibold text-gray-700">{projectDetail?.customers[0]?.name || 'Chưa xác định'}</p>
                     </div>
                   </div>
 
@@ -236,12 +291,15 @@ export const ProjectDetail = () => {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm border border-gray-100">
-                      <Users className="h-5 w-5 text-emerald-500" />
-                    </div>
+                    <Avatar className="h-10 w-10 border border-gray-100 shadow-sm">
+                      <AvatarImage src={projectDetail?.owner?.avatar?.path} alt={projectDetail?.owner?.name || ''} />
+                      <AvatarFallback className="bg-emerald-50 text-emerald-600 text-[10px] font-bold">
+                        {(projectDetail?.owner?.name || 'A').charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
                     <div>
                       <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Phụ trách</p>
-                      {/* <p className="text-sm font-semibold text-gray-700">{projectDetail?.owner || 'Quản trị viên'}</p> */}
+                      <p className="text-sm font-semibold text-gray-700">{projectDetail?.owner?.name || 'Quản trị viên'}</p>
                     </div>
                   </div>
                 </div>
@@ -333,6 +391,24 @@ export const ProjectDetail = () => {
           isLoading={isPending}
         >
           <FormCreatTask mode="create" employees={employees?.docs ?? []} />
+        </CustomModal>
+      </FormProvider>
+
+      <FormProvider {...projectForm}>
+        <CustomModal
+          open={openProjectSettings}
+          onOpenChange={setOpenProjectSettings}
+          title="Cập nhật dự án"
+          description="Chỉnh sửa thông tin dự án."
+          confirmText="Lưu thay đổi"
+          onConfirm={projectForm.handleSubmit(onUpdateProject)}
+          isLoading={isUpdatingProject}
+        >
+          {openProjectSettings && (
+            <Suspense fallback={<div className="h-40 flex items-center justify-center font-medium text-muted-foreground animate-pulse">Đang tải biểu mẫu...</div>}>
+              <ProjectFormContent />
+            </Suspense>
+          )}
         </CustomModal>
       </FormProvider>
     </>

@@ -42,7 +42,11 @@ export const useGetEmployee = () => {
     queryKey: employeeKeys.all(),
     queryFn: async () => {
       const response = await api.get<IEmployeeResponse>(
-        API_ENDPOINTS.GET_EMPLOYEES
+        API_ENDPOINTS.GET_EMPLOYEES, {
+        params: {
+          role: 'Employee'
+        }
+      }
       );
       return response as unknown as IEmployeeResponse;
     },

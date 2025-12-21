@@ -21,9 +21,9 @@ const isValidDate = (val: unknown) => {
 /* ------------------ Project ------------------ */
 export const createProjectSchema = z
   .object({
-    client: z.string().min(1, 'Client không được để trống'),
     name: z.string().min(1, 'Tên project không được để trống'),
     status: z.string().min(1, 'Trạng thái project không được để trống'),
+    customers: z.array(z.string()).min(1, 'Vui lòng chọn khách hàng'),
 
     startAt: z.any().refine(isValidDate, {
       message: 'Ngày bắt đầu không được để trống',
@@ -73,12 +73,7 @@ export const taskSchema = z
     status: z.string().min(1, {
       message: 'Trạng thái task không được để trống',
     }),
-    assignedTo: z
-      .string()
-      .min(1, {
-        message: 'Người được giao task không hợp lệ',
-      })
-      .optional(),
+    assignedTo: z.array(z.string()).optional(),
     startAt: z
       .string()
       .min(1, {
@@ -130,7 +125,7 @@ export const createTaskSchema = z
     status: z.string().min(1, {
       message: 'Trạng thái task không được để trống',
     }),
-    assignedTo: z.string().optional(),
+    assignedUsers: z.array(z.string()).optional(),
     priority: z.string().optional(),
 
     startAt: z.preprocess(
@@ -170,7 +165,7 @@ export const updateTaskSchema = z
     status: z.string().min(1, {
       message: 'Trạng thái task không được để trống',
     }),
-    assignedTo: z.string().optional(),
+    assignedUsers: z.array(z.string()).optional(),
     startAt: z.number().optional(),
     endAt: z.number().optional(),
     priority: z.string().optional(),
