@@ -53,15 +53,11 @@ export function AppSidebar() {
 
   // Tự động mở group tương ứng với route và đóng các group khác
   useEffect(() => {
-    let found = false;
     items.forEach(item => {
       if (item.children?.some(child => location.pathname === child.url)) {
         setOpenGroups([item.title]);
-        found = true;
       }
     });
-    // Nếu không thuộc group nào và đang ở menu đơn, có thể đóng hết (tùy chọn)
-    // if (!found) setOpenGroups([]); 
   }, [location.pathname]);
 
   const handleParentClick = (item: NavItem) => {
