@@ -8,6 +8,7 @@ import { ProjectDetail } from '@/pages/Project/ProjectDetail';
 import { TaskDetail } from '@/pages/Project/TaskDetail';
 import { Profile } from '@/components/pages/Profile';
 import { Employees } from '@/pages/Employees';
+import { CreateEmployee } from '@/pages/Employees/createEmployee';
 type ExtendedRoute = RouteProps & {
   permissions?: string[]; // Permissions required for the route
 };
@@ -43,8 +44,12 @@ export const privateRoutes: ExtendedRoute[] = [
   {
     path: URL_PATH.PROFILE,
     element: <Profile />,
-  },{
+  }, {
     path: URL_PATH.EMPLOYEE,
     element: <Employees />,
+  },
+  {
+    path: URL_PATH.CREATE_PROFILE,
+    element: <CreateEmployee />,
   }
 ];

@@ -231,10 +231,10 @@ export const ProjectGrid = ({
                 <div className="flex items-center justify-between pt-1 border-t border-gray-100">
                   <div className="flex items-center gap-2">
                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-[10px] font-bold text-white shadow-sm">
-                      {project.owner.charAt(0).toUpperCase()}
+                      {project?.owner?.charAt(0).toUpperCase()}
                     </div>
                     <span className="truncate text-[11px] font-medium text-gray-600">
-                      {project.owner.split('@')[0]}
+                      {project?.owner?.split('@')[0]}
                     </span>
                   </div>
                   <div className="text-[10px] font-medium text-gray-400">

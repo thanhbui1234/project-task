@@ -16,6 +16,7 @@ interface IProjectDetailResponse {
   acceptedCount: number;
   inProgressCount: number;
   completedCount: number;
+  owner?: string;
 }
 export const useGetProjectDetail = (id: string) => {
   return useQuery<IProjectDetailResponse, Error>({

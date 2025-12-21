@@ -138,23 +138,28 @@ export const ProjectDetail = () => {
   };
 
   const onSubmit = (data: ICreateTaskSchema) => {
-    const { dirtyFields } = form.formState;
-
-    // Initialize with fields that must always be sent (defaults or required)
-    const submitData: Partial<ICreateTaskSchema> = {
-      status: data.status,
-      priority: data.priority,
+    // Đối với Create, chúng ta nên dùng toàn bộ data đã được Zod validate thành công.
+    // Việc lọc dirtyFields chỉ thực sự cần thiết khi Update.
+    const submitData = {
+      ...data,
+      // Đảm bảo các trường ngày tháng được định dạng đúng nếu cần (tùy thuộc vào yêu cầu của API)
+      startAt: data.startAt ? new Date(data.startAt).getTime() : undefined,
+      endAt: data.endAt ? new Date(data.endAt).getTime() : undefined,
     };
 
-    Object.keys(dirtyFields).forEach((key) => {
-      const k = key as keyof ICreateTaskSchema;
-      // @ts-ignore
-      submitData[k] = data[k];
-    });
+    console.log('Payload gửi đi:', submitData);
 
     createTask(submitData as ICreateTaskSchema);
     setOpenModal(false);
-    form.reset();
+    form.reset({
+      name: '',
+      description: '',
+      status: STATUS_TASK.STARTED,
+      priority: PRIORITY_TASK.LOW,
+      assignedTo: '',
+      startAt: undefined,
+      endAt: undefined,
+    });
   };
 
   return (
@@ -173,8 +178,8 @@ export const ProjectDetail = () => {
               <div className="flex-1 space-y-6">
                 <div className="flex flex-wrap items-start gap-5">
                   <div className={`flex h-16 w-16 items-center justify-center rounded-2xl shadow-xl transition-transform duration-300 group-hover:scale-110 ${expireStatus === EXPIRE_STATUS.EXPIRED ? 'bg-red-600 shadow-red-200' :
-                      expireStatus === EXPIRE_STATUS.ABOUT_TO_EXPIRE ? 'bg-orange-500 shadow-orange-200' :
-                        'bg-gradient-to-br from-indigo-500 to-purple-600 shadow-indigo-200'
+                    expireStatus === EXPIRE_STATUS.ABOUT_TO_EXPIRE ? 'bg-orange-500 shadow-orange-200' :
+                      'bg-gradient-to-br from-indigo-500 to-purple-600 shadow-indigo-200'
                     }`}>
                     <FolderKanban className="h-8 w-8 text-white" />
                   </div>
@@ -236,7 +241,7 @@ export const ProjectDetail = () => {
                     </div>
                     <div>
                       <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Phụ trách</p>
-                      <p className="text-sm font-semibold text-gray-700">{projectDetail?.owner?.name || 'Quản trị viên'}</p>
+                      {/* <p className="text-sm font-semibold text-gray-700">{projectDetail?.owner || 'Quản trị viên'}</p> */}
                     </div>
                   </div>
                 </div>
