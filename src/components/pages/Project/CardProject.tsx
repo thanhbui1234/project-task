@@ -21,20 +21,21 @@ import { isDirector } from '@/utils/role';
 import { Link } from 'react-router-dom';
 import { getExpireStatus } from '@/utils/expriceDate';
 import { EXPIRE_STATUS } from '@/consts/exprie';
+import { STATUS_PROJECT } from '@/consts/statusProject';
 
 const statusConfig: Record<
   string,
   { label: string; className: string }
 > = {
-  PENDING: {
+  [STATUS_PROJECT.PENDING]: {
     label: 'Đang chờ',
     className: 'bg-amber-100 text-amber-700 hover:bg-amber-200/80'
   },
-  IN_PROGRESS: {
+  [STATUS_PROJECT.IN_PROGRESS]: {
     label: 'Đang thực hiện',
     className: 'bg-blue-100 text-blue-700 hover:bg-blue-200/80'
   },
-  COMPLETED: {
+  [STATUS_PROJECT.COMPLETED]: {
     label: 'Hoàn thành',
     className: 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200/80'
   },
@@ -121,7 +122,8 @@ export const ProjectGrid = ({
           className: 'bg-gray-100 text-gray-700',
         };
 
-        const expireStatus = project.endAt ? getExpireStatus(project.endAt) : EXPIRE_STATUS.ACTIVE;
+        const isCompleted = project.status === STATUS_PROJECT.COMPLETED;
+        const expireStatus = (project.endAt && !isCompleted) ? getExpireStatus(project.endAt) : EXPIRE_STATUS.ACTIVE;
         const expireUI = expireUIConfig[expireStatus as keyof typeof expireUIConfig];
 
         return (
@@ -230,11 +232,19 @@ export const ProjectGrid = ({
                 {/* OWNER */}
                 <div className="flex items-center justify-between pt-1 border-t border-gray-100">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-[10px] font-bold text-white shadow-sm">
-                      {project?.owner?.charAt(0).toUpperCase()}
-                    </div>
+                    {project?.owner?.avatar?.path ? (
+                      <img
+                        src={project.owner.avatar.path}
+                        alt={project.owner.name || ''}
+                        className="h-6 w-6 rounded-full object-cover border border-gray-100 shadow-sm"
+                      />
+                    ) : (
+                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-[10px] font-bold text-white shadow-sm">
+                        {(project?.owner?.name || project?.owner?.email || 'A').charAt(0).toUpperCase()}
+                      </div>
+                    )}
                     <span className="truncate text-[11px] font-medium text-gray-600">
-                      {project?.owner?.split('@')[0]}
+                      {project?.owner?.name || project?.owner?.email?.split('@')[0] || 'Unknown'}
                     </span>
                   </div>
                   <div className="text-[10px] font-medium text-gray-400">

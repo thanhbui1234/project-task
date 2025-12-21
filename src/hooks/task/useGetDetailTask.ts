@@ -3,6 +3,7 @@ import api from '@/lib/axios';
 import { API_ENDPOINTS } from '@/common/apiEndpoints';
 import { taskDetailKeys } from '@/utils/queryKeyFactory';
 import type { IFile } from '@/types/file';
+import type { IEmployee } from '@/types/employee';
 interface GetDetailTaskParams {
   taskId: string;
 }
@@ -11,7 +12,7 @@ interface ITaskDetailResponse {
   name: string;
   status: string;
   description: string;
-  assignedTo: string | null;
+  assignedUsers: IEmployee[];
   projectId: string;
   startAt: string | null;
   endAt: string | null;

@@ -7,6 +7,12 @@ export interface IEmployee {
   role: string;
   status: string;
   name: string | null;
+  avatar_id?: string;
+  avatar?: {
+    id: string;
+    path: string;
+    type: string;
+  };
 }
 
 export interface IEmployeeResponse {

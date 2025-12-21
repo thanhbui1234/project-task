@@ -33,7 +33,7 @@ export const CreateEmployee = () => {
     defaultValues: {
       name: '',
       email: '',
-      phone: '',
+      phoneNumber: '',
       password: '',
       role: ROLES.EMPLOYEE,
     },
@@ -134,10 +134,10 @@ export const CreateEmployee = () => {
                 <motion.div variants={itemVariants} className="space-y-2">
                   <div className="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     <Smartphone className="w-4 h-4 text-blue-500" />
-                    <Label htmlFor="phone">Số điện thoại</Label>
+                    <Label htmlFor="phoneNumber">Số điện thoại</Label>
                   </div>
                   <InputField
-                    name="phone"
+                    name="phoneNumber"
                     control={control}
                     placeholder="09xx xxx xxx"
                     errors={errors}

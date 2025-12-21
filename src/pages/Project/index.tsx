@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { CustomModal } from '@/components/ui/DialogCustom';
 import { Plus, Search } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { Input } from '@/components/ui/input';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,7 +9,10 @@ import {
   createProjectSchema,
   type ICreateProjectSchema,
 } from '@/schemas/Project';
-import { ProjectFormContent } from '@/components/pages/Project/FormCreatProject';
+// Xoá import trực tiếp để dùng lazy load
+const ProjectFormContent = lazy(() =>
+  import('@/components/pages/Project/FormCreatProject').then(module => ({ default: module.ProjectFormContent }))
+);
 import { useCreatProject } from '@/hooks/project/useCreatProject';
 import { useGetProjects } from '@/hooks/project/useGetProject';
 import { useDeleteProject } from '@/hooks/project/useDeleteProject';
@@ -82,7 +85,7 @@ export default function Projects() {
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
       name: '',
-      client: '',
+      customers: [],
       status: STATUS_PROJECT.PENDING,
       startAt: '',
       endAt: '',
@@ -102,7 +105,7 @@ export default function Projects() {
 
     form.reset({
       name: project.name,
-      client: project.client,
+      customers: Array.isArray(project.customers) ? project.customers : project.customers ? [project.customers] : [],
       status: project.status,
       startAt: getDate(project.startAt),
       endAt: getDate(project.endAt),
@@ -115,7 +118,7 @@ export default function Projects() {
     setMode('create');
     form.reset({
       name: '',
-      client: '',
+      customers: [],
       status: '',
     });
     setOpenModal(true);
@@ -184,7 +187,11 @@ export default function Projects() {
           onConfirm={form.handleSubmit(onSubmit)}
           isLoading={mode === 'create' ? isPending : isUpdatePending}
         >
-          <ProjectFormContent />
+          {openModal && (
+            <Suspense fallback={<div className="h-40 flex items-center justify-center font-medium text-muted-foreground animate-pulse">Đang tải biểu mẫu...</div>}>
+              <ProjectFormContent />
+            </Suspense>
+          )}
         </CustomModal>
       </FormProvider>
       <CustomModal

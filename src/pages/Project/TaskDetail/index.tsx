@@ -59,6 +59,7 @@ import {
   Trash2,
   User,
 } from 'lucide-react';
+import { MultiSelect, type MultiSelectOption } from '@/components/ui/MultiSelect';
 
 import {
   PRIORITY_CONFIG_TASK,
@@ -128,7 +129,7 @@ export const TaskDetail = () => {
       name: '',
       description: '',
       status: STATUS_TASK.STARTED,
-      assignedTo: '',
+      assignedUsers: [],
       startAt: undefined,
       endAt: undefined,
       priority: PRIORITY_TASK.LOW,
@@ -142,6 +143,11 @@ export const TaskDetail = () => {
     formState: { errors, dirtyFields },
   } = methods;
 
+  const employeeOptions: MultiSelectOption[] = employees.map((emp) => ({
+    value: emp.id,
+    label: emp.name || emp.email,
+  }));
+
   // Typed control for InputField
   const typedControl = control;
 
@@ -153,7 +159,7 @@ export const TaskDetail = () => {
         name: task.name,
         description: task.description || '',
         status: task.status,
-        assignedTo: task.assignedTo || '',
+        assignedUsers: task.assignedUsers?.map(u => u.id) || [],
         startAt: task.startAt ? new Date(task.startAt).getTime() : undefined,
         endAt: task.endAt ? new Date(task.endAt).getTime() : undefined,
         priority: task.priority || PRIORITY_TASK.LOW,
@@ -222,12 +228,6 @@ export const TaskDetail = () => {
   const statusConfig = getStatusConfig(task?.status);
   const StatusIcon = statusConfig.icon;
 
-  // Find employee name by ID
-  const getEmployeeName = (id: string | null) => {
-    if (!id) return null;
-    const employee = employees.find((e) => e.id === id);
-    return employee?.name ?? employee?.email ?? id;
-  };
 
   if (isLoading) {
     return (
@@ -620,20 +620,30 @@ export const TaskDetail = () => {
                         <User className="h-4 w-4" />
                         <span>Người thực hiện</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-7 w-7">
-                          <AvatarFallback className="bg-linear-to-br from-emerald-400 to-teal-500 text-xs font-medium text-white">
-                            {getInitials(getEmployeeName(task.assignedTo))}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm font-medium">
-                          {getEmployeeName(task.assignedTo) ?? 'Chưa giao'}
-                        </span>
+                      <div className="flex flex-wrap items-center justify-end gap-1.5 max-w-[240px]">
+                        {task.assignedUsers && task.assignedUsers.length > 0 ? (
+                          task.assignedUsers.map((user) => (
+                            <Tooltip key={user.id}>
+                              <TooltipTrigger asChild>
+                                <Avatar className="h-7 w-7 border-2 border-white dark:border-slate-800 shadow-sm transition-transform hover:scale-110">
+                                  <AvatarFallback className="bg-linear-to-br from-indigo-500 to-purple-600 text-[10px] font-bold text-white uppercase">
+                                    {getInitials(user.name)}
+                                  </AvatarFallback>
+                                </Avatar>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="text-xs font-medium">{user.name || user.email}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          ))
+                        ) : (
+                          <span className="text-sm font-medium text-slate-400">Chưa giao</span>
+                        )}
                         <Button
                           variant="ghost"
                           size="icon-sm"
                           onClick={() => setIsEditModalOpen(true)}
-                          className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+                          className="h-6 w-6 ml-1 opacity-0 transition-opacity group-hover:opacity-100"
                         >
                           <Edit3 className="h-3 w-3" />
                         </Button>
@@ -909,39 +919,23 @@ export const TaskDetail = () => {
                   )}
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 md:col-span-2">
                   <Label>Người được giao</Label>
                   <Controller
                     control={control}
-                    name="assignedTo"
+                    name="assignedUsers"
                     render={({ field }) => (
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Chọn người được giao" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {employees.map((employee) => (
-                            <SelectItem key={employee.id} value={employee.id}>
-                              <div className="flex items-center gap-2">
-                                <Avatar className="h-5 w-5">
-                                  <AvatarFallback className="text-[10px]">
-                                    {getInitials(employee.name)}
-                                  </AvatarFallback>
-                                </Avatar>
-                                {employee.name ?? employee.email}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <MultiSelect
+                        options={employeeOptions}
+                        selected={field.value || []}
+                        onChange={field.onChange}
+                        placeholder="Chọn người được giao"
+                      />
                     )}
                   />
-                  {errors.assignedTo && (
+                  {errors.assignedUsers && (
                     <p className="text-destructive text-xs">
-                      {errors.assignedTo.message}
+                      {errors.assignedUsers.message}
                     </p>
                   )}
                 </div>

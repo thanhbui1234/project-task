@@ -25,7 +25,7 @@ export default function RegisterForm() {
     defaultValues: {
       name: '',
       email: '',
-      phone: '',
+      phoneNumber: '',
       password: '',
     },
   });
@@ -78,7 +78,7 @@ export default function RegisterForm() {
             {/* Password */}
             <InputField
               label="Số điện thoại"
-              name="phone"
+              name="phoneNumber"
               control={control}
               placeholder="Số điện thoại"
               errors={errors}
