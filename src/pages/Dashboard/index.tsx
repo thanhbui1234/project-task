@@ -48,8 +48,8 @@ export default function Dashboard() {
   };
 
   const words = [
-    { text: 'Welcome' },
-    { text: 'back,' },
+    { text: 'Xin' },
+    { text: 'chào,' },
     {
       text: profile?.name ? `${profile.name}!` : 'User!',
       className: 'text-blue-500 dark:text-blue-500',

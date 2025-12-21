@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import { useLogin } from '@/hooks/auth/useLogin';
 import { URL_PATH } from '@/common/url';
 import { useNavigate } from 'react-router-dom';
+import { ROLES } from '@/consts/role';
 export default function LoginForm() {
   const navigate = useNavigate();
   const {
@@ -30,8 +31,13 @@ export default function LoginForm() {
   const { login, isPending } = useLogin();
   const handleLogin = (data: loginType) => {
     login(data, {
-      onSuccess: () => {
-        navigate(URL_PATH.DASHBOARD);
+      onSuccess: (response) => {
+        const role = response.user?.role;
+        if (role === ROLES.CUSTOMER) {
+          navigate(URL_PATH.PROJECT);
+        } else {
+          navigate(URL_PATH.DASHBOARD);
+        }
       },
     });
   };

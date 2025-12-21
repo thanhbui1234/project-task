@@ -27,7 +27,6 @@ export const ProjectFormContent = () => {
     value: customer.id,
     label: customer.name,
   })) || [];
-  console.log(customerOptions, 'customerOptions')
   const status = watch('status');
   const isCompleted = status === STATUS_PROJECT.COMPLETED;
 

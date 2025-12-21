@@ -1,6 +1,7 @@
 // src/utils/auth.utils.ts
 const ACCESS_TOKEN_KEY = 'access_token';
 const USER_KEY = 'auth_user';
+import { queryClient } from '@/lib';
 
 const isBrowser = typeof window !== 'undefined';
 
@@ -56,6 +57,7 @@ export const auth = {
   logout: () => {
     useAuthStore.getState().logout();
     clearAuth();
+    queryClient.clear();
   },
 };
 
@@ -67,4 +69,10 @@ export function logout(navigate: any) {
   } else {
     window.location.href = '/login';
   }
+  queryClient.clear();
+}
+
+export function getRole() {
+  const user = useAuthStore.getState().user;
+  return user?.role;
 }

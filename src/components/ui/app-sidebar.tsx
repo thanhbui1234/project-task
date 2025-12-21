@@ -1,6 +1,6 @@
 import { Home, User, LogOut, Users, ChevronRight, CircleDot } from 'lucide-react';
 import { GoTasklist } from 'react-icons/go';
-import { logout } from '@/utils/auth';
+import { getRole, logout } from '@/utils/auth';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -19,22 +19,25 @@ import {
 import { Link, useLocation } from 'react-router-dom';
 import { URL_PATH } from '@/common/url';
 import { cn } from '@/lib/utils';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { ROLES } from '@/consts/role';
 
 interface NavItem {
   title: string;
   url?: string;
   icon: any;
   children?: { title: string; url: string; icon?: any }[];
+  roles?: string[];
 }
 
 const items: NavItem[] = [
-  { title: 'Trang chủ', url: URL_PATH.DASHBOARD, icon: Home },
-  { title: 'Dự án của tôi', url: URL_PATH.PROJECT, icon: GoTasklist },
-  { title: 'Hồ sơ', url: URL_PATH.PROFILE, icon: User },
+  { title: 'Trang chủ', url: URL_PATH.DASHBOARD, icon: Home, roles: [ROLES.DIRECTOR, ROLES.EMPLOYEE] },
+  { title: 'Dự án của tôi', url: URL_PATH.PROJECT, icon: GoTasklist, roles: [ROLES.DIRECTOR, ROLES.CUSTOMER, ROLES.EMPLOYEE] },
+  { title: 'Hồ sơ', url: URL_PATH.PROFILE, icon: User, roles: [ROLES.DIRECTOR, ROLES.CUSTOMER, ROLES.EMPLOYEE] },
   {
     title: 'Nhân viên',
     icon: Users,
+    roles: [ROLES.DIRECTOR],
     children: [
       { title: 'Danh sách nhân viên', url: URL_PATH.EMPLOYEE, icon: CircleDot },
       { title: 'Tạo tài khoản', url: URL_PATH.CREATE_PROFILE, icon: CircleDot },
@@ -50,15 +53,26 @@ export function AppSidebar() {
 
   // Quản lý duy nhất 1 group mở tại một thời điểm
   const [openGroups, setOpenGroups] = useState<string[]>(['Nhân viên']);
+  const role = getRole();
+
+  // Filter items based on role
+  const filteredItems = useMemo(() => items.filter(item => {
+    if (!item.roles) return true;
+    return item.roles.includes(role as any);
+  }), [role]);
 
   // Tự động mở group tương ứng với route và đóng các group khác
   useEffect(() => {
-    items.forEach(item => {
-      if (item.children?.some(child => location.pathname === child.url)) {
-        setOpenGroups([item.title]);
-      }
-    });
-  }, [location.pathname]);
+    const activeGroup = filteredItems.find(item =>
+      item.children?.some(child => location.pathname === child.url)
+    );
+    if (activeGroup) {
+      setOpenGroups(prev => {
+        if (prev.length === 1 && prev[0] === activeGroup.title) return prev;
+        return [activeGroup.title];
+      });
+    }
+  }, [location.pathname, filteredItems]);
 
   const handleParentClick = (item: NavItem) => {
     if (item.children?.length) {
@@ -154,7 +168,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="gap-0">
-              {items.map((item) => {
+              {filteredItems.map((item) => {
                 const hasChildren = !!item.children?.length;
                 const isOpen = openGroups.includes(item.title);
                 const isParentActive = item.url ? location.pathname === item.url : item.children?.some(child => location.pathname === child.url);
