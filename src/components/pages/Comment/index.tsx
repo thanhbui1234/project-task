@@ -50,6 +50,7 @@ export const CommentComponent = ({ taskId, commentsData }: CommentComponentProps
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadingFiles, setUploadingFiles] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isSubmittingRef = useRef(false);
 
   const { data: me } = useGetMe();
   const { createComment, isPending: isCreating } = useCreateComment(taskId);
@@ -70,10 +71,11 @@ export const CommentComponent = ({ taskId, commentsData }: CommentComponentProps
   };
 
   const handleSend = async () => {
-    if (isCreating || uploadingFiles) return;
+    if (isSubmittingRef.current || isCreating || uploadingFiles) return;
     if (!content.trim() && selectedFiles.length === 0) return;
 
     try {
+      isSubmittingRef.current = true;
       let fileIds: string[] = [];
 
       if (selectedFiles.length > 0) {
@@ -90,15 +92,18 @@ export const CommentComponent = ({ taskId, commentsData }: CommentComponentProps
           setContent('');
           setSelectedFiles([]);
           setUploadingFiles(false);
+          isSubmittingRef.current = false;
           toast.success('Gửi bình luận thành công');
         },
         onError: () => {
           setUploadingFiles(false);
+          isSubmittingRef.current = false;
         }
       });
     } catch (error) {
       console.error('Failed to send comment:', error);
       setUploadingFiles(false);
+      isSubmittingRef.current = false;
       toast.error('Không thể gửi bình luận');
     }
   };

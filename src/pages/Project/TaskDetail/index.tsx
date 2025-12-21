@@ -169,8 +169,9 @@ export const TaskDetail = () => {
   }, [task, reset]);
 
   const onSubmit = (data: IUpdateTaskSchema) => {
-    const payload: Partial<IUpdateTaskSchema> & { taskId: string } = {
+    const payload: Partial<IUpdateTaskSchema> & { taskId: string; projectId?: string } = {
       taskId: data.taskId,
+      projectId: task?.projectId,
     };
 
     // Only include dirty fields
@@ -208,6 +209,7 @@ export const TaskDetail = () => {
       updateTask({
         taskId: task.id,
         status: newStatus,
+        projectId: task.projectId,
       });
     }
   };
