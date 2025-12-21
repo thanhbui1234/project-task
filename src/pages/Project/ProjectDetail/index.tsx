@@ -318,7 +318,7 @@ export const ProjectDetail = () => {
                 <p className="text-3xl font-black text-gray-900">
                   {projectDetail?.startedCount ?? 0}
                 </p>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 mt-1">Sẵn sàng</p>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 mt-1">Bắt đầu</p>
               </div>
             </div>
 
