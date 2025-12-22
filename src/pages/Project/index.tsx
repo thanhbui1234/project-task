@@ -21,6 +21,7 @@ import { ProjectGrid } from '@/components/pages/Project/CardProject';
 import type { registerType } from '@/schemas/auth';
 import type { IProject } from '@/types/project';
 import { STATUS_PROJECT } from '@/consts/statusProject';
+import { isDirector } from '@/utils/role';
 
 export default function Projects() {
   const [openModal, setOpenModal] = useState(false);
@@ -140,15 +141,17 @@ export default function Projects() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="fixed right-8 bottom-8 z-10">
-        <Button
-          size="lg"
-          className="rounded-full shadow-2xl transition-transform hover:scale-110"
-          onClick={handleAdd}
-        >
-          <Plus className="mr-2 h-6 w-6" /> Thêm dự án
-        </Button>
-      </div>
+      {isDirector() && (
+        <div className="fixed right-8 bottom-8 z-10">
+          <Button
+            size="lg"
+            className="rounded-full shadow-2xl transition-transform hover:scale-110"
+            onClick={handleAdd}
+          >
+            <Plus className="mr-2 h-6 w-6" /> Thêm dự án
+          </Button>
+        </div>
+      )}
 
       <div className="container mx-auto px-4 py-8">
         <div className="sticky top-0 z-20 mb-6 flex justify-end py-4 backdrop-blur-sm">
