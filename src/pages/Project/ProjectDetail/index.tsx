@@ -126,6 +126,7 @@ export const ProjectDetail = () => {
       customers: [],
       startAt: undefined,
       endAt: undefined,
+      mode: 'edit',
     },
   });
 
@@ -166,6 +167,7 @@ export const ProjectDetail = () => {
         customers: Array.isArray(projectDetail.customers) ? projectDetail.customers : projectDetail.customers ? [projectDetail.customers] : [],
         startAt: projectDetail.startAt || undefined,
         endAt: projectDetail.endAt || undefined,
+        mode: 'edit',
       });
       setOpenProjectSettings(true);
     }
@@ -201,8 +203,9 @@ export const ProjectDetail = () => {
   };
 
   const onUpdateProject = (data: ICreateProjectSchema) => {
+    const { mode, ...submitData } = data;
     if (projectId) {
-      updateProject({ id: projectId, data });
+      updateProject({ id: projectId, data: submitData });
       setOpenProjectSettings(false);
     }
   };
@@ -408,7 +411,7 @@ export const ProjectDetail = () => {
         >
           {openProjectSettings && (
             <Suspense fallback={<div className="h-40 flex items-center justify-center font-medium text-muted-foreground animate-pulse">Đang tải biểu mẫu...</div>}>
-              <ProjectFormContent />
+              <ProjectFormContent mode="edit" />
             </Suspense>
           )}
         </CustomModal>
