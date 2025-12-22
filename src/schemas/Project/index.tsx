@@ -23,7 +23,8 @@ export const createProjectSchema = z
   .object({
     name: z.string().min(1, 'Tên project không được để trống'),
     status: z.string().min(1, 'Trạng thái project không được để trống'),
-    customers: z.array(z.string()).min(1, 'Vui lòng chọn khách hàng'),
+    customers: z.array(z.string()),
+    mode: z.string().optional(),
 
     startAt: z.any().refine(isValidDate, {
       message: 'Ngày bắt đầu không được để trống',
@@ -51,6 +52,14 @@ export const createProjectSchema = z
       ctx.addIssue({
         path: ['endAt'],
         message: 'Ngày kết thúc phải lớn hơn ngày bắt đầu',
+        code: z.ZodIssueCode.custom,
+      });
+    }
+
+    if (data.mode === 'edit' && (!data.customers || data.customers.length === 0)) {
+      ctx.addIssue({
+        path: ['customers'],
+        message: 'Vui lòng chọn khách hàng',
         code: z.ZodIssueCode.custom,
       });
     }

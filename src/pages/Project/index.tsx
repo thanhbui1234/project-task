@@ -89,6 +89,7 @@ export default function Projects() {
       status: STATUS_PROJECT.PENDING,
       startAt: '',
       endAt: '',
+      mode: 'create' as string,
     },
   });
 
@@ -109,6 +110,7 @@ export default function Projects() {
       status: project.status,
       startAt: getDate(project.startAt),
       endAt: getDate(project.endAt),
+      mode: 'edit',
     });
     setOpenModal(true);
   };
@@ -120,15 +122,17 @@ export default function Projects() {
       name: '',
       customers: [],
       status: '',
+      mode: 'create',
     });
     setOpenModal(true);
   };
 
   const onSubmit = (data: ICreateProjectSchema) => {
-    if (mode === 'create') {
-      createProject(data as unknown as registerType);
-    } else if (mode === 'edit' && selectedProject) {
-      updateProject({ id: selectedProject.id, data });
+    const { mode: formMode, ...submitData } = data;
+    if (formMode === 'create') {
+      createProject(submitData as unknown as registerType);
+    } else if (formMode === 'edit' && selectedProject) {
+      updateProject({ id: selectedProject.id, data: submitData });
     }
     setOpenModal(false);
     form.reset();
@@ -189,7 +193,7 @@ export default function Projects() {
         >
           {openModal && (
             <Suspense fallback={<div className="h-40 flex items-center justify-center font-medium text-muted-foreground animate-pulse">Đang tải biểu mẫu...</div>}>
-              <ProjectFormContent />
+              <ProjectFormContent key={mode} mode={mode} />
             </Suspense>
           )}
         </CustomModal>
