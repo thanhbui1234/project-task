@@ -16,7 +16,7 @@ interface CustomModalProps {
   onOpenChange: (open: boolean) => void;
   title?: string;
   description?: string;
-  children: ReactNode; // Form content goes here
+  children?: ReactNode; // Form content goes here
   confirmText?: string;
   cancelText?: string;
   onConfirm?: () => void;

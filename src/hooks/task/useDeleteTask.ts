@@ -12,7 +12,7 @@ export const useDeleteTask = (projectId: string) => {
     { id: string }
   >({
     mutationFn: (data: { id: string }) =>
-      api.delete(API_ENDPOINTS.DELETE_TASK + '/' + projectId + '/' + data.id),
+      api.delete(API_ENDPOINTS.DELETE_TASK + '/' + data.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: taskKeys.list({ projectId }) });
       toast.success('Xóa công việc thành công');

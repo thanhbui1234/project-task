@@ -1,16 +1,59 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { ITask } from '@/types/task';
 import type { IEmployee } from '@/types/employee';
 import { PRIORITY_TASK, STATUS_CONFIG_TASK } from '@/consts/task';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpDown } from 'lucide-react';
-
+import { Trash } from 'lucide-react';
+import { useDeleteTask } from '@/hooks/task/useDeleteTask';
+import { CustomModal } from '@/components/ui/DialogCustom';
 // Type cho table meta
 export interface TaskTableMeta {
   employees: IEmployee[];
 }
+
+const TaskDeleteAction = ({ task }: { task: ITask }) => {
+  const [open, setOpen] = useState(false);
+  const { deleteTask, isPending } = useDeleteTask(task.projectId);
+
+  const handleDelete = () => {
+    deleteTask(
+      { id: task.id },
+      {
+        onSuccess: () => {
+          setOpen(false);
+        },
+      }
+    );
+  };
+
+  return (
+    <div onClick={(e) => e.stopPropagation()}>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setOpen(true)}
+        className="text-red-500 hover:text-red-600 hover:bg-red-50"
+      >
+        <Trash className="h-4 w-4" />
+      </Button>
+
+      <CustomModal
+        open={open}
+        onOpenChange={setOpen}
+        title="Xóa công việc"
+        description="Bạn có chắc chắn muốn xóa công việc này không? Hành động này không thể hoàn tác."
+        confirmText="Xóa"
+        cancelText="Hủy"
+        onConfirm={handleDelete}
+        isLoading={isPending}
+      />
+    </div>
+  );
+};
 
 // Hàm helper để lấy tên employee từ ID
 
@@ -95,7 +138,6 @@ export const taskColumns: ColumnDef<ITask>[] = [
     header: 'Độ ưu tiên',
     cell: ({ row }) => {
       const priority = row.getValue('priority') as string;
-      console.log(priority);
       switch (priority) {
         case PRIORITY_TASK.LOW:
           return 'Thấp';
@@ -129,5 +171,9 @@ export const taskColumns: ColumnDef<ITask>[] = [
         <div>{date ? new Date(date).toLocaleDateString('vi-VN') : '-'}</div>
       );
     },
-  }
+  }, {
+    accessorKey: 'action',
+    header: 'Hành động',
+    cell: ({ row }) => <TaskDeleteAction task={row.original} />,
+  },
 ];

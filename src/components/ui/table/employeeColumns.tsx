@@ -2,6 +2,51 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
 import type { IEmployee } from '@/types/employee';
+import { Button } from '@/components/ui/button';
+import { Trash } from 'lucide-react';
+import { useState } from 'react';
+import { useDeleteEmployee } from '@/hooks/employee/useDeleteEmployee';
+import { CustomModal } from '@/components/ui/DialogCustom';
+
+const EmployeeDeleteAction = ({ employee }: { employee: IEmployee }) => {
+  const [open, setOpen] = useState(false);
+  const { deleteEmployee, isPending } = useDeleteEmployee();
+
+  const handleDelete = () => {
+    deleteEmployee(
+      { id: employee.id },
+      {
+        onSuccess: () => {
+          setOpen(false);
+        },
+      }
+    );
+  };
+
+  return (
+    <div onClick={(e) => e.stopPropagation()}>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setOpen(true)}
+        className="text-red-500 hover:text-red-600 hover:bg-red-50"
+      >
+        <Trash className="h-4 w-4" />
+      </Button>
+
+      <CustomModal
+        open={open}
+        onOpenChange={setOpen}
+        title="Xóa nhân viên"
+        description={`Bạn có chắc chắn muốn xóa nhân viên "${employee.name}" không? Hành động này không thể hoàn tác.`}
+        confirmText="Xóa"
+        cancelText="Hủy"
+        onConfirm={handleDelete}
+        isLoading={isPending}
+      />
+    </div>
+  );
+};
 
 export const employeeColumns: ColumnDef<IEmployee>[] = [
   {
@@ -72,5 +117,10 @@ export const employeeColumns: ColumnDef<IEmployee>[] = [
         </Badge>
       );
     },
+  },
+  {
+    accessorKey: 'action',
+    header: 'Hành động',
+    cell: ({ row }) => <EmployeeDeleteAction employee={row.original} />,
   },
 ];
